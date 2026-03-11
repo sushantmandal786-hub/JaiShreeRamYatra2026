@@ -10,9 +10,11 @@ import { HeroParticles } from "@/components/HeroParticles";
 import { LangText } from "@/components/LangText";
 import { LiveCounters } from "@/components/LiveCounters";
 import { MarqueeTicker } from "@/components/MarqueeTicker";
+import { PageLoader } from "@/components/PageLoader";
 import { SiteHeader } from "@/components/SiteHeader";
 import { StickyDonateBar } from "@/components/StickyDonateBar";
 import { YouTubeMusicFab } from "@/components/YouTubeMusicFab";
+import { useDonateSettings } from "@/hooks/useDonateSettings";
 import { useScrollAnimations } from "@/hooks/useScrollAnimations";
 import { EVENT_DETAILS } from "@/lib/site-config";
 
@@ -66,48 +68,64 @@ const features = [
 ];
 
 const galleryItems = [
-  "/assets/yatra1.jpg",
-  "/assets/yatra2.jpg",
-  "/assets/yatra3.jpg",
-  "/assets/yatra4.jpg",
-  "/assets/yatra5.jpg",
-  "/assets/yatra6.jpg"
+  "/assets/gallery1.jpg",
+  "/assets/gallery2.jpg",
+  "/assets/gallery3.jpg",
+  "/assets/gallery4.jpg",
+  "/assets/gallery5.jpg",
+  "/assets/gallery6.jpg"
 ];
 
 const communityCards = [
   {
     title: "School youth joining seva briefing",
-    text: "Training and route discipline session with local students."
+    text: "Training and route discipline session with local students.",
+    image: "/assets/moment1.jpg"
   },
   {
     title: "Women-led bhajan mandali participation",
-    text: "Neighborhood bhajan groups preparing for the grand day."
+    text: "Neighborhood bhajan groups preparing for the grand day.",
+    image: "/assets/moment2.jpg"
   },
   {
     title: "Samuhik prasad planning committee",
-    text: "Joint planning for quality prasad and smooth distribution."
+    text: "Joint planning for quality prasad and smooth distribution.",
+    image: "/assets/moment3.jpg"
   }
 ];
 
 export function HomePage() {
   useScrollAnimations();
+  const { upiUrl, donateLabel } = useDonateSettings({ amount: 501 });
 
   return (
     <main className="bg-ink text-cream" id="top">
+      <PageLoader durationMs={3000} />
       <SiteHeader />
       <MarqueeTicker />
 
       <section className="relative h-[185svh] bg-hero-noise">
+        <div className="pointer-events-none absolute inset-0">
+          <Image src="/assets/hero_yatra.jpg" alt="" fill className="object-cover opacity-20" priority />
+        </div>
         <div className="sticky top-[104px] flex h-[calc(100svh-104px)] items-stretch overflow-hidden">
           <HeroParticles />
+          <Image
+            src="/assets/hanuman_chanting.GIF"
+            alt=""
+            width={540}
+            height={540}
+            className="pointer-events-none absolute -bottom-4 right-2 hidden h-auto w-[34vw] max-w-[440px] opacity-30 lg:block"
+            priority
+          />
 
           <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-6 px-4 py-4 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:gap-8 lg:py-6">
             <div className="flex flex-col justify-between gap-5">
               <div className="space-y-4">
                 <div data-hero-reveal className="overflow-hidden rounded-2xl border border-gold/30 bg-black/25 p-1 shadow-glow">
                   <Image
-                    src="/assets/hanuman_chanting.GIF"
-                    alt="Hanuman chanting"
+                    src="/assets/ram-mandir-glow.png"
+                    alt="Ram mandir glow artwork"
                     width={1200}
                     height={420}
                     className="h-40 w-full animate-pulse-glow rounded-xl object-cover sm:h-52"
@@ -124,6 +142,7 @@ export function HomePage() {
                       en="Join the Grand Shri Ram Navami Shobha Yatra 2026"
                       hi="भव्य श्री राम नवमी शोभा यात्रा 2026 में शामिल हों"
                       hing="Grand Shri Ram Navami Shobha Yatra 2026 mein shamil ho"
+                      textKey="hero_title"
                     />
                   </span>
                 </h1>
@@ -133,6 +152,7 @@ export function HomePage() {
                     en="Be part of a divine celebration of faith, unity and devotion."
                     hi="आस्था, एकता और भक्ति के दिव्य उत्सव का हिस्सा बनें।"
                     hing="Aastha, ekta aur bhakti ke divya utsav ka hissa banein."
+                    textKey="hero_subtitle"
                   />
                 </p>
               </div>
@@ -171,6 +191,7 @@ export function HomePage() {
               en="Faith talks. The Yatra talks back."
               hi="आस्था बोलती है। यात्रा उत्तर देती है।"
               hing="Faith bolti hai. Yatra jawab deti hai."
+              textKey="about_heading"
             />
           </h2>
           <p data-reveal data-sequence={1} className="mt-5 max-w-3xl text-base text-maroon/85 sm:text-lg">
@@ -187,6 +208,7 @@ export function HomePage() {
               en="Talk therapy for your soul"
               hi="आत्मा के लिए संवाद-सेवा"
               hing="Soul ke liye devotional talk therapy"
+              textKey="impact_heading"
             />
           </h2>
           <p data-reveal data-sequence={1} className="mt-3 max-w-3xl text-cream/75 sm:text-lg">
@@ -217,6 +239,7 @@ export function HomePage() {
               en="Get your devotion off your mind"
               hi="भक्ति की चिंता मन से उतारिए"
               hing="Devotion ko tension-free banaiye"
+              textKey="transparency_heading"
             />
           </h2>
           <p data-reveal data-sequence={1} className="mt-3 max-w-3xl text-maroon/80 sm:text-lg">
@@ -237,6 +260,7 @@ export function HomePage() {
                 en="Let devotion conquer every obstacle"
                 hi="भक्ति हर बाधा को पार करे"
                 hing="Devotion har obstacle ko jeet le"
+                textKey="donate_heading"
               />
             </h2>
             <p data-reveal data-sequence={1} className="mt-3 text-cream/75 sm:text-lg">
@@ -244,18 +268,30 @@ export function HomePage() {
             </p>
             <div data-reveal data-sequence={2} className="mt-6 flex flex-wrap gap-3">
               <a
-                href={`upi://pay?pa=${encodeURIComponent(EVENT_DETAILS.primaryUpi)}&pn=${encodeURIComponent(
-                  "Shri Ram Navami Yatra"
-                )}&am=501&tn=${encodeURIComponent("Jai Shri Ram Donation")}`}
+                href={upiUrl}
                 className="rounded-full bg-saffron px-5 py-3 text-sm font-semibold text-ink transition hover:bg-gold"
               >
-                Donate via UPI
+                {donateLabel ? (
+                  donateLabel
+                ) : (
+                  <LangText
+                    en="Donate via UPI"
+                    hi="UPI से दान करें"
+                    hing="UPI se donate karein"
+                    textKey="donate_button_primary"
+                  />
+                )}
               </a>
               <a
                 href={`tel:${EVENT_DETAILS.contacts[0]}`}
                 className="rounded-full border border-gold/45 px-5 py-3 text-sm font-semibold text-gold transition hover:bg-gold/10"
               >
-                Call Donation Desk
+                <LangText
+                  en="Call Donation Desk"
+                  hi="दान डेस्क पर कॉल करें"
+                  hing="Donation desk ko call karein"
+                  textKey="donation_desk_call"
+                />
               </a>
             </div>
           </div>
@@ -279,6 +315,7 @@ export function HomePage() {
               en="The community has spoken (and it loves the Yatra)"
               hi="समुदाय बोल चुका है (और यात्रा से प्रेम करता है)"
               hing="Community bol chuka hai (aur yatra se pyaar karta hai)"
+              textKey="testimonial_heading"
             />
           </h2>
 
@@ -306,6 +343,7 @@ export function HomePage() {
               en="Finally, a Yatra without boundaries"
               hi="अंततः, बिना सीमाओं की यात्रा"
               hing="Finally, ek boundary-free yatra"
+              textKey="feature_heading"
             />
           </h2>
 
@@ -331,6 +369,7 @@ export function HomePage() {
               en="New moments from previous Yatras"
               hi="पिछली यात्राओं की नई झलकियाँ"
               hing="Previous yatra ke naye moments"
+              textKey="gallery_heading"
             />
           </h2>
 
@@ -362,6 +401,7 @@ export function HomePage() {
               en="In the community"
               hi="समुदाय में"
               hing="In the community"
+              textKey="community_heading"
             />
           </h2>
 
@@ -373,6 +413,13 @@ export function HomePage() {
                 data-sequence={idx + 1}
                 className="glass rounded-2xl p-5"
               >
+                <Image
+                  src={card.image}
+                  alt={card.title}
+                  width={420}
+                  height={280}
+                  className="h-40 w-full rounded-xl object-cover"
+                />
                 <h3 className="text-lg font-semibold text-gold">{card.title}</h3>
                 <p className="mt-2 text-sm text-cream/75">{card.text}</p>
               </article>
@@ -388,6 +435,7 @@ export function HomePage() {
               en="Ram Ka Kaaj Hai, Aapka Saath Anmol Hai"
               hi="राम का काज है, आपका साथ अनमोल है"
               hing="Ram ka kaaj hai, aapka saath anmol hai"
+              textKey="final_cta_heading"
             />
           </h2>
           <p data-reveal data-sequence={1} className="mt-3 text-lg font-medium text-deep-saffron sm:text-xl">
@@ -395,6 +443,7 @@ export function HomePage() {
               en="Donate Now & Be Blessed"
               hi="अभी दान करें और आशीर्वाद पाएं"
               hing="Donate now aur blessed baniye"
+              textKey="final_cta_subtitle"
             />
           </p>
 

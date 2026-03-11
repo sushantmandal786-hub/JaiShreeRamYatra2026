@@ -1,4 +1,4 @@
-import { APPS_SCRIPT_ENDPOINT, OVERRIDE_STORAGE_KEY } from "@/lib/site-config";
+import { APPS_SCRIPT_ENDPOINT, OVERRIDE_STORAGE_KEY, type SiteOverrides } from "@/lib/site-config";
 
 type Payload = Record<string, string | number | boolean | null>;
 
@@ -13,7 +13,7 @@ function resolveEndpoint() {
       return APPS_SCRIPT_ENDPOINT;
     }
 
-    const parsed = JSON.parse(raw) as { appsScriptUrl?: string };
+    const parsed = JSON.parse(raw) as SiteOverrides;
     if (parsed.appsScriptUrl && parsed.appsScriptUrl.startsWith("https://")) {
       return parsed.appsScriptUrl;
     }

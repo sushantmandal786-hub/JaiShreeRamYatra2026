@@ -9,7 +9,8 @@ export const EVENT_DETAILS = {
     "Shri Ram Navami Shobha Yatra Samiti, Patna, Bihar"
   ],
   contacts: ["8651352594", "9525407043", "9693597872", "77759941329", "79797800991"],
-  primaryUpi: "8651352594@upi",
+  primaryUpiNumber: "7909041154",
+  primaryUpi: "7909041154@upi",
   fallbackDateIso: "2027-04-15T13:00:00+05:30",
   eventDateIso: "2026-03-27T13:00:00+05:30"
 } as const;
@@ -26,6 +27,24 @@ export const DEFAULT_COUNTERS = {
   donationAmount: 2451200,
   devoteeCount: 18240,
   volunteerCount: 512
+};
+
+export type SiteOverrides = {
+  appsScriptUrl?: string;
+  upiId?: string;
+  upiNumber?: string;
+  buttons?: {
+    donateNow?: string;
+  };
+  counters?: Partial<typeof DEFAULT_COUNTERS>;
+  textOverrides?: Record<
+    string,
+    {
+      en?: string;
+      hi?: string;
+      hing?: string;
+    }
+  >;
 };
 
 export const LANGUAGE_LABELS: Record<LangCode, string> = {

@@ -20,10 +20,22 @@ const bootstrapLanguageScript = `
   function applyLanguage(current) {
     document.documentElement.setAttribute("data-site-lang", current);
     localStorage.setItem("site_lang", current);
+    var overridePayload = {};
+    try {
+      overridePayload = JSON.parse(localStorage.getItem("shri_ram_overrides") || "{}");
+    } catch (error) {
+      overridePayload = {};
+    }
+
+    var textOverrides = overridePayload && overridePayload.textOverrides ? overridePayload.textOverrides : {};
     var nodes = document.querySelectorAll("[data-en][data-hi][data-hing]");
     nodes.forEach(function (node) {
       var key = "data-" + current;
       var value = node.getAttribute(key);
+      var textKey = node.getAttribute("data-text-key");
+      if (textKey && textOverrides[textKey] && textOverrides[textKey][current]) {
+        value = textOverrides[textKey][current];
+      }
       if (value == null) return;
       if (node.getAttribute("data-allow-html") === "true") {
         node.innerHTML = value;
@@ -41,6 +53,10 @@ const bootstrapLanguageScript = `
   window.__getSiteLang = function () {
     return document.documentElement.getAttribute("data-site-lang") || "en";
   };
+
+  window.addEventListener("shri-ram-overrides-change", function () {
+    applyLanguage(window.__getSiteLang());
+  });
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {

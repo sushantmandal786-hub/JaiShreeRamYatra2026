@@ -13,6 +13,7 @@ export function EventMetaBar() {
           en="Open Location"
           hi="लोकेशन खोलें"
           hing="Location kholen"
+          textKey="open_location_label"
         />
       </a>
     </div>

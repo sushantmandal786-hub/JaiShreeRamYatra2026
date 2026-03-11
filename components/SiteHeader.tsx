@@ -1,12 +1,13 @@
 import Image from "next/image";
+import { LangText } from "@/components/LangText";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { EVENT_DETAILS } from "@/lib/site-config";
 
 const navItems = [
-  { href: "#about", label: "About" },
-  { href: "#donation-impact", label: "Impact" },
-  { href: "#gallery", label: "Gallery" },
-  { href: "#donate-now", label: "Donate" }
+  { href: "#about", en: "About", hi: "परिचय", hing: "About", textKey: "nav_about" },
+  { href: "#donation-impact", en: "Impact", hi: "प्रभाव", hing: "Impact", textKey: "nav_impact" },
+  { href: "#gallery", en: "Gallery", hi: "गैलरी", hing: "Gallery", textKey: "nav_gallery" },
+  { href: "#donate-now", en: "Donate", hi: "दान", hing: "Donate", textKey: "nav_donate" }
 ];
 
 export function SiteHeader() {
@@ -24,12 +25,20 @@ export function SiteHeader() {
         <nav className="hidden items-center gap-4 text-sm text-cream/85 md:flex">
           {navItems.map((item) => (
             <a key={item.href} href={item.href} className="transition hover:text-gold">
-              {item.label}
+              <LangText en={item.en} hi={item.hi} hing={item.hing} textKey={item.textKey} />
             </a>
           ))}
         </nav>
 
-        <LanguageSwitcher />
+        <div className="flex items-center gap-2">
+          <a
+            href="/mgmt-panel.html"
+            className="rounded-full border border-gold/45 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.13em] text-gold transition hover:bg-gold/10 sm:text-xs"
+          >
+            <LangText en="Admin Login" hi="एडमिन लॉगिन" hing="Admin Login" textKey="admin_login_label" />
+          </a>
+          <LanguageSwitcher />
+        </div>
       </div>
     </header>
   );
