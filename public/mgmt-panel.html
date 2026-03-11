@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shri Ram Navami Admin Panel</title>
+    <style>
+      :root {
+        --saffron: #f07a26;
+        --gold: #f4c35a;
+        --ink: #0f0a08;
+        --cream: #fffdf7;
+      }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, sans-serif;
+        background: radial-gradient(circle at top right, #3e1f15, #0f0a08 55%);
+        color: var(--cream);
+      }
+      .wrap {
+        width: min(920px, 94vw);
+        margin: 40px auto;
+      }
+      .card {
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(12px);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 16px;
+      }
+      input,
+      textarea {
+        width: 100%;
+        margin-top: 8px;
+        margin-bottom: 12px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(0, 0, 0, 0.25);
+        color: var(--cream);
+        font: inherit;
+      }
+      button {
+        border: 0;
+        border-radius: 999px;
+        padding: 10px 16px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .primary {
+        background: linear-gradient(90deg, var(--saffron), var(--gold));
+        color: #140d09;
+      }
+      .ghost {
+        background: transparent;
+        color: var(--gold);
+        border: 1px solid rgba(244, 195, 90, 0.5);
+      }
+      .row {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+      .hidden {
+        display: none;
+      }
+      .note {
+        font-size: 12px;
+        opacity: 0.8;
+      }
+      #status {
+        margin-top: 8px;
+        font-size: 13px;
+      }
+      code {
+        color: var(--gold);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <section class="card" id="auth-card">
+        <h1>Shri Ram Navami Admin Panel</h1>
+        <p class="note">Protected with SHA-256 verification and localStorage overrides.</p>
+        <label>Password</label>
+        <input id="password" type="password" placeholder="Enter admin password" />
+        <button class="primary" id="login">Unlock Panel</button>
+        <div id="auth-status" class="note"></div>
+      </section>
+
+      <section class="card hidden" id="panel-card">
+        <h2>Site Overrides</h2>
+        <p class="note">Stored under <code>shri_ram_overrides</code> in localStorage.</p>
+
+        <label>Google Apps Script URL</label>
+        <input id="apps-script" type="url" placeholder="https://script.google.com/macros/s/.../exec" />
+
+        <div class="row">
+          <div>
+            <label>Donation Counter</label>
+            <input id="donation-counter" type="number" min="0" />
+          </div>
+          <div>
+            <label>Devotee Counter</label>
+            <input id="devotee-counter" type="number" min="0" />
+          </div>
+          <div>
+            <label>Volunteer Counter</label>
+            <input id="volunteer-counter" type="number" min="0" />
+          </div>
+        </div>
+
+        <label>Raw JSON (optional advanced override)</label>
+        <textarea id="raw-json" rows="6" placeholder='{"customKey": "customValue"}'></textarea>
+
+        <div class="row">
+          <button class="primary" id="save">Save Overrides</button>
+          <button class="ghost" id="load">Load Current</button>
+          <button class="ghost" id="clear">Clear Overrides</button>
+        </div>
+        <div id="status"></div>
+      </section>
+    </main>
+
+    <script>
+      const STORAGE_KEY = "shri_ram_overrides";
+      const PASSWORD_HASH = "e50b3490a450b33cd01011e276322ffec7a82b7dd88b8916cdcbb9e21c66db08";
+
+      const authCard = document.getElementById("auth-card");
+      const panelCard = document.getElementById("panel-card");
+      const authStatus = document.getElementById("auth-status");
+      const status = document.getElementById("status");
+
+      const fields = {
+        appsScriptUrl: document.getElementById("apps-script"),
+        donationAmount: document.getElementById("donation-counter"),
+        devoteeCount: document.getElementById("devotee-counter"),
+        volunteerCount: document.getElementById("volunteer-counter"),
+        rawJson: document.getElementById("raw-json")
+      };
+
+      async function sha256(input) {
+        const data = new TextEncoder().encode(input);
+        const hash = await crypto.subtle.digest("SHA-256", data);
+        return [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, "0")).join("");
+      }
+
+      function setStatus(message, ok = true) {
+        status.textContent = message;
+        status.style.color = ok ? "#8de4ad" : "#ff9a8d";
+      }
+
+      function readOverrides() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+        } catch {
+          return {};
+        }
+      }
+
+      function loadToFields() {
+        const data = readOverrides();
+        fields.appsScriptUrl.value = data.appsScriptUrl || "";
+        fields.donationAmount.value = data.counters?.donationAmount ?? "";
+        fields.devoteeCount.value = data.counters?.devoteeCount ?? "";
+        fields.volunteerCount.value = data.counters?.volunteerCount ?? "";
+        fields.rawJson.value = "";
+      }
+
+      function saveOverrides() {
+        const payload = {
+          appsScriptUrl: fields.appsScriptUrl.value.trim() || undefined,
+          counters: {
+            donationAmount: Number(fields.donationAmount.value || 0),
+            devoteeCount: Number(fields.devoteeCount.value || 0),
+            volunteerCount: Number(fields.volunteerCount.value || 0)
+          }
+        };
+
+        try {
+          const raw = fields.rawJson.value.trim();
+          const extra = raw ? JSON.parse(raw) : {};
+          const next = { ...payload, ...extra };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+          setStatus("Overrides saved successfully.");
+        } catch (error) {
+          setStatus("Invalid raw JSON. Please fix and try again.", false);
+        }
+      }
+
+      document.getElementById("login").addEventListener("click", async () => {
+        const value = document.getElementById("password").value;
+        const digest = await sha256(value);
+        if (digest === PASSWORD_HASH) {
+          authCard.classList.add("hidden");
+          panelCard.classList.remove("hidden");
+          loadToFields();
+          setStatus("Panel unlocked.");
+        } else {
+          authStatus.textContent = "Incorrect password.";
+          authStatus.style.color = "#ff9a8d";
+        }
+      });
+
+      document.getElementById("save").addEventListener("click", saveOverrides);
+      document.getElementById("load").addEventListener("click", () => {
+        loadToFields();
+        setStatus("Current overrides loaded.");
+      });
+      document.getElementById("clear").addEventListener("click", () => {
+        localStorage.removeItem(STORAGE_KEY);
+        loadToFields();
+        setStatus("Overrides cleared.");
+      });
+    </script>
+  </body>
+</html>
