@@ -1,8 +1,4 @@
 {
-  /**
-   * Let Vercel use the default Next.js build pipeline.
-   * We only keep routing and headers configuration here.
-   */
   "rewrites": [
     { "source": "/admin", "destination": "/mgmt-panel.html" },
     { "source": "/admin/", "destination": "/mgmt-panel.html" },
