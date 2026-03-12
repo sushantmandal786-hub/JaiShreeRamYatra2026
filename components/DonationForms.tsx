@@ -20,6 +20,9 @@ export function DonationForms() {
     gpayIntentUrl,
     phonepeIntentUrl,
     paytmIntentUrl,
+    bhimIntentUrl,
+    credIntentUrl,
+    amazonIntentUrl,
     upiIdLooksValid,
     donateLabel
   } = useDonateSettings({ amount: 501 });
@@ -108,7 +111,7 @@ export function DonationForms() {
           <a
             href={upiUrl}
             onClick={openUpiCheckout}
-            className="rounded-full bg-saffron px-4 py-2 text-sm font-semibold text-ink transition hover:bg-gold"
+            className="rounded-full bg-gradient-to-r from-saffron to-gold px-4 py-2 text-sm font-semibold text-ink transition-transform duration-300 hover:-translate-y-1 hover:shadow-glow"
           >
             {donateLabel ? (
               donateLabel
@@ -123,7 +126,7 @@ export function DonationForms() {
           </a>
           <a
             href={`https://wa.me/91${EVENT_DETAILS.contacts[0]}`}
-            className="rounded-full border border-deep-saffron/45 px-4 py-2 text-sm font-semibold text-deep-saffron transition hover:bg-deep-saffron/10"
+            className="rounded-full border border-deep-saffron/45 px-4 py-2 text-sm font-semibold text-deep-saffron transition-all duration-300 hover:-translate-y-1 hover:bg-deep-saffron/10 hover:shadow-[0_4px_12px_rgba(196,81,19,0.15)]"
           >
             <LangText
               en="WhatsApp Seva Desk"
@@ -132,14 +135,23 @@ export function DonationForms() {
               textKey="whatsapp_desk_label"
             />
           </a>
-          <a href={gpayIntentUrl} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 hover:bg-maroon/5">
+          <a href={gpayIntentUrl} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 transition hover:-translate-y-0.5 hover:bg-maroon/5 hover:shadow-sm">
             Open in GPay
           </a>
-          <a href={phonepeIntentUrl} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 hover:bg-maroon/5">
+          <a href={phonepeIntentUrl} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 transition hover:-translate-y-0.5 hover:bg-maroon/5 hover:shadow-sm">
             Open in PhonePe
           </a>
-          <a href={paytmIntentUrl} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 hover:bg-maroon/5">
+          <a href={paytmIntentUrl} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 transition hover:-translate-y-0.5 hover:bg-maroon/5 hover:shadow-sm">
             Open in Paytm
+          </a>
+          <a href={bhimIntentUrl} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 transition hover:-translate-y-0.5 hover:bg-maroon/5 hover:shadow-sm">
+            Open in BHIM
+          </a>
+          <a href={credIntentUrl} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 transition hover:-translate-y-0.5 hover:bg-maroon/5 hover:shadow-sm">
+            Open in Cred
+          </a>
+          <a href={amazonIntentUrl} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 transition hover:-translate-y-0.5 hover:bg-maroon/5 hover:shadow-sm">
+            Amazon Pay
           </a>
         </div>
         {!upiIdLooksValid ? (

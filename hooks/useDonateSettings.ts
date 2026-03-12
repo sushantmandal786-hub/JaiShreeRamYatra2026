@@ -20,6 +20,9 @@ type DonateSettings = {
   gpayIntentUrl: string;
   phonepeIntentUrl: string;
   paytmIntentUrl: string;
+  bhimIntentUrl: string;
+  credIntentUrl: string;
+  amazonIntentUrl: string;
   upiIdLooksValid: boolean;
   donateLabel: string | null;
 };
@@ -63,6 +66,18 @@ export function useDonateSettings(options: UseDonateSettingsOptions = {}): Donat
     () => `intent://pay?${upiQuery}#Intent;scheme=upi;package=net.one97.paytm;end`,
     [upiQuery]
   );
+  const bhimIntentUrl = useMemo(
+    () => `intent://pay?${upiQuery}#Intent;scheme=upi;package=in.org.npci.upiapp;end`,
+    [upiQuery]
+  );
+  const credIntentUrl = useMemo(
+    () => `intent://pay?${upiQuery}#Intent;scheme=upi;package=com.dreamplug.androidapp;end`,
+    [upiQuery]
+  );
+  const amazonIntentUrl = useMemo(
+    () => `intent://pay?${upiQuery}#Intent;scheme=upi;package=in.amazon.mShop.android.shopping;end`,
+    [upiQuery]
+  );
 
   return {
     upiUrl,
@@ -73,6 +88,9 @@ export function useDonateSettings(options: UseDonateSettingsOptions = {}): Donat
     gpayIntentUrl,
     phonepeIntentUrl,
     paytmIntentUrl,
+    bhimIntentUrl,
+    credIntentUrl,
+    amazonIntentUrl,
     upiIdLooksValid,
     donateLabel
   };

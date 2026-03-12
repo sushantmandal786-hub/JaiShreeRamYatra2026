@@ -229,7 +229,7 @@ export function HomePage() {
                 <a
                   href={upiUrl}
                   onClick={openUpiCheckout}
-                  className="rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-saffron"
+                  className="rounded-full bg-gradient-to-r from-saffron to-gold px-5 py-2.5 text-sm font-semibold text-ink transition-all duration-300 hover:-translate-y-1 hover:shadow-glow"
                 >
                   {donateLabel || (
                     <LangText en="Yatra Hetu Daan Karein" hi="यात्रा हेतु दान करें" hing="Yatra hetu daan karein" textKey="hero_cta_donate" />
@@ -237,7 +237,7 @@ export function HomePage() {
                 </a>
                 <a
                   href="#timeline"
-                  className="rounded-full border border-cream/65 px-5 py-2.5 text-sm font-semibold text-cream transition hover:bg-white/10"
+                  className="rounded-full border border-cream/65 px-5 py-2.5 text-sm font-semibold text-cream transition-all duration-300 hover:-translate-y-1 hover:bg-white/10"
                 >
                   <LangText en="Marg Vivaran Dekhein" hi="मार्ग विवरण देखें" hing="Marg vivaran dekhein" textKey="hero_cta_route" />
                 </a>
@@ -298,354 +298,354 @@ export function HomePage() {
         <MantraTypewriterBar />
 
         <section id="about" className="section-divider bg-cream py-16 text-ink sm:py-20">
-        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
-          <h2 data-reveal className="text-3xl font-semibold leading-tight sm:text-4xl lg:text-5xl">
-            <LangText
-              en="A Yatra Powered by Faith and Unity"
-              hi="आस्था और एकता से संचालित भव्य यात्रा"
-              hing="Aastha aur ekta se chalti bhavya yatra"
-              textKey="about_heading"
-            />
-          </h2>
-          <p data-reveal data-sequence={1} className="mt-5 max-w-3xl text-base text-maroon/85 sm:text-lg">
-            Shri Ram Navami Bhavya Shobha Yatra is a collective expression of bhakti, discipline and unity.
-            With your participation and support, this yatra becomes a sacred experience for every family in
-            Rupaspur and nearby communities.
-          </p>
-        </div>
+          <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
+            <h2 data-reveal className="text-3xl font-semibold leading-tight sm:text-4xl lg:text-5xl">
+              <LangText
+                en="A Yatra Powered by Faith and Unity"
+                hi="आस्था और एकता से संचालित भव्य यात्रा"
+                hing="Aastha aur ekta se chalti bhavya yatra"
+                textKey="about_heading"
+              />
+            </h2>
+            <p data-reveal data-sequence={1} className="mt-5 max-w-3xl text-base text-maroon/85 sm:text-lg">
+              Shri Ram Navami Bhavya Shobha Yatra is a collective expression of bhakti, discipline and unity.
+              With your participation and support, this yatra becomes a sacred experience for every family in
+              Rupaspur and nearby communities.
+            </p>
+          </div>
         </section>
 
         <section id="donation-impact" className="section-divider bg-ink py-16 sm:py-20">
-        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
-          <h2 data-reveal className="text-3xl font-semibold text-cream sm:text-4xl">
-            <LangText
-              en="Where Your Donation Creates Real Seva"
-              hi="जहां आपका दान वास्तविक सेवा बनता है"
-              hing="Jahan aapka daan real seva mein badalta hai"
-              textKey="impact_heading"
-            />
-          </h2>
-          <p data-reveal data-sequence={1} className="mt-3 max-w-3xl text-cream/75 sm:text-lg">
-            Your contribution directly supports route arrangements, seva operations and spiritual programs.
-          </p>
+          <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
+            <h2 data-reveal className="text-3xl font-semibold text-cream sm:text-4xl">
+              <LangText
+                en="Where Your Donation Creates Real Seva"
+                hi="जहां आपका दान वास्तविक सेवा बनता है"
+                hing="Jahan aapka daan real seva mein badalta hai"
+                textKey="impact_heading"
+              />
+            </h2>
+            <p data-reveal data-sequence={1} className="mt-3 max-w-3xl text-cream/75 sm:text-lg">
+              Your contribution directly supports route arrangements, seva operations and spiritual programs.
+            </p>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-            {impactBlocks.map((item, idx) => (
-              <article
-                key={item.title}
-                data-pop="true"
-                data-sequence={idx + 1}
-                className="glass rounded-2xl p-4"
-              >
-                <p className="text-xs uppercase tracking-[0.15em] text-gold">0{idx + 1}</p>
-                <h3 className="mt-2 text-base font-semibold text-cream">{item.title}</h3>
-                <p className="mt-2 text-sm text-cream/75">{item.text}</p>
-              </article>
-            ))}
+            <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+              {impactBlocks.map((item, idx) => (
+                <article
+                  key={item.title}
+                  data-pop="true"
+                  data-sequence={idx + 1}
+                  className="glass rounded-2xl p-4 transition-transform duration-300 hover:-translate-y-1.5 hover:shadow-glass"
+                >
+                  <p className="text-xs uppercase tracking-[0.15em] text-gold">0{idx + 1}</p>
+                  <h3 className="mt-2 text-base font-semibold text-cream">{item.title}</h3>
+                  <p className="mt-2 text-sm text-cream/75">{item.text}</p>
+                </article>
+              ))}
+            </div>
           </div>
-        </div>
         </section>
 
         <section className="section-divider bg-cream py-16 text-ink sm:py-20">
-        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
-          <h2 data-reveal className="text-3xl font-semibold text-maroon sm:text-4xl">
-            <LangText
-              en="Complete Transparency in Every Contribution"
-              hi="हर योगदान में पूर्ण पारदर्शिता"
-              hing="Har contribution mein complete transparency"
-              textKey="transparency_heading"
-            />
-          </h2>
-          <p data-reveal data-sequence={1} className="mt-3 max-w-3xl text-maroon/80 sm:text-lg">
-            We present category-wise fund allocation so every devotee can contribute with full trust.
-          </p>
-
-          <div data-reveal data-sequence={2} className="mt-8">
-            <FundUsagePie />
-          </div>
-        </div>
-        </section>
-
-        <section className="section-divider bg-ink py-16 sm:py-20">
-        <div className="mx-auto grid w-full max-w-screen-xl gap-8 px-4 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:px-8 xl:px-10">
-          <div>
-            <h2 data-reveal className="text-3xl font-semibold sm:text-4xl">
+          <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
+            <h2 data-reveal className="text-3xl font-semibold text-maroon sm:text-4xl">
               <LangText
-                en="Simple, Fast and Sacred Way to Donate"
-                hi="दान का सरल, तेज और पवित्र मार्ग"
-                hing="Donate karne ka simple, fast aur sacred tareeka"
-                textKey="donate_heading"
+                en="Complete Transparency in Every Contribution"
+                hi="हर योगदान में पूर्ण पारदर्शिता"
+                hing="Har contribution mein complete transparency"
+                textKey="transparency_heading"
               />
             </h2>
-            <p data-reveal data-sequence={1} className="mt-3 text-cream/75 sm:text-lg">
-              Offer your support instantly through UPI links, QR scan, and direct seva-desk assistance.
+            <p data-reveal data-sequence={1} className="mt-3 max-w-3xl text-maroon/80 sm:text-lg">
+              We present category-wise fund allocation so every devotee can contribute with full trust.
             </p>
 
-            <div data-reveal data-sequence={2} className="mt-6 max-w-2xl">
-              <LiveCounters />
-            </div>
-
-            <div data-reveal data-sequence={3} className="mt-6 flex flex-wrap gap-3">
-              <a
-                href={upiUrl}
-                onClick={openUpiCheckout}
-                className="rounded-full bg-saffron px-5 py-3 text-sm font-semibold text-ink transition hover:bg-gold"
-              >
-                {donateLabel ? (
-                  donateLabel
-                ) : (
-                  <LangText
-                    en="Donate via UPI"
-                    hi="UPI से दान करें"
-                    hing="UPI se donate karein"
-                    textKey="donate_button_primary"
-                  />
-                )}
-              </a>
-              <a
-                href={`tel:${EVENT_DETAILS.contacts[0]}`}
-                className="rounded-full border border-gold/45 px-5 py-3 text-sm font-semibold text-gold transition hover:bg-gold/10"
-              >
-                <LangText
-                  en="Call Donation Desk"
-                  hi="दान डेस्क पर कॉल करें"
-                  hing="Donation desk ko call karein"
-                  textKey="donation_desk_call"
-                />
-              </a>
+            <div data-reveal data-sequence={2} className="mt-8">
+              <FundUsagePie />
             </div>
           </div>
-
-          <div data-reveal className="glass rounded-3xl p-4 sm:p-6">
-            <Image
-              src="/assets/qr_code.png"
-              alt="Donation QR code"
-              width={420}
-              height={420}
-              className="mx-auto h-auto w-full max-w-[260px] rounded-2xl border border-gold/30 bg-white object-cover"
-            />
-          </div>
-        </div>
-        </section>
-
-      <section className="section-divider bg-cream py-16 text-ink sm:py-20">
-        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
-          <h2 data-reveal className="text-3xl font-semibold text-maroon sm:text-4xl">
-            <LangText
-              en="What Devotees Say About the Yatra"
-              hi="यात्रा के बारे में श्रद्धालुओं की वाणी"
-              hing="Yatra ke baare mein devotees kya kehte hain"
-              textKey="testimonial_heading"
-            />
-          </h2>
-
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {testimonialCards.map((item, idx) => (
-              <article
-                key={item.no}
-                data-pop="true"
-                data-sequence={idx + 1}
-                className="rounded-2xl border border-maroon/20 bg-white p-5 shadow-[0_12px_24px_rgba(111,28,20,0.08)]"
-              >
-                <p className="text-xs font-semibold tracking-[0.15em] text-deep-saffron">{item.no}</p>
-                <p className="mt-3 text-base font-medium text-maroon">“{item.quote}”</p>
-                <p className="mt-4 text-sm text-maroon/70">{item.name}</p>
-              </article>
-            ))}
-          </div>
-        </div>
         </section>
 
         <section className="section-divider bg-ink py-16 sm:py-20">
-        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
-          <h2 data-reveal className="text-3xl font-semibold sm:text-4xl">
-            <LangText
-              en="Everything Needed for a Smooth Yatra"
-              hi="सुगम यात्रा के लिए हर आवश्यक व्यवस्था"
-              hing="Smooth yatra ke liye har zaroori vyavastha"
-              textKey="feature_heading"
-            />
-          </h2>
+          <div className="mx-auto grid w-full max-w-screen-xl gap-8 px-4 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:px-8 xl:px-10">
+            <div>
+              <h2 data-reveal className="text-3xl font-semibold sm:text-4xl">
+                <LangText
+                  en="Simple, Fast and Sacred Way to Donate"
+                  hi="दान का सरल, तेज और पवित्र मार्ग"
+                  hing="Donate karne ka simple, fast aur sacred tareeka"
+                  textKey="donate_heading"
+                />
+              </h2>
+              <p data-reveal data-sequence={1} className="mt-3 text-cream/75 sm:text-lg">
+                Offer your support instantly through UPI links, QR scan, and direct seva-desk assistance.
+              </p>
 
-          <ul className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((item, idx) => (
-              <li
-                key={item}
-                data-pop="true"
-                data-sequence={idx + 1}
-                className="glass rounded-xl p-4 text-sm text-cream/85 sm:text-base"
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
+              <div data-reveal data-sequence={2} className="mt-6 max-w-2xl">
+                <LiveCounters />
+              </div>
+
+              <div data-reveal data-sequence={3} className="mt-6 flex flex-wrap gap-3">
+                <a
+                  href={upiUrl}
+                  onClick={openUpiCheckout}
+                  className="rounded-full bg-saffron px-5 py-3 text-sm font-semibold text-ink transition hover:bg-gold"
+                >
+                  {donateLabel ? (
+                    donateLabel
+                  ) : (
+                    <LangText
+                      en="Donate via UPI"
+                      hi="UPI से दान करें"
+                      hing="UPI se donate karein"
+                      textKey="donate_button_primary"
+                    />
+                  )}
+                </a>
+                <a
+                  href={`tel:${EVENT_DETAILS.contacts[0]}`}
+                  className="rounded-full border border-gold/45 px-5 py-3 text-sm font-semibold text-gold transition hover:bg-gold/10"
+                >
+                  <LangText
+                    en="Call Donation Desk"
+                    hi="दान डेस्क पर कॉल करें"
+                    hing="Donation desk ko call karein"
+                    textKey="donation_desk_call"
+                  />
+                </a>
+              </div>
+            </div>
+
+            <div data-reveal className="glass rounded-3xl p-4 sm:p-6">
+              <Image
+                src="/assets/qr_code.png"
+                alt="Donation QR code"
+                width={420}
+                height={420}
+                className="mx-auto h-auto w-full max-w-[260px] rounded-2xl border border-gold/30 bg-white object-cover"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className="section-divider bg-cream py-16 text-ink sm:py-20">
+          <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
+            <h2 data-reveal className="text-3xl font-semibold text-maroon sm:text-4xl">
+              <LangText
+                en="What Devotees Say About the Yatra"
+                hi="यात्रा के बारे में श्रद्धालुओं की वाणी"
+                hing="Yatra ke baare mein devotees kya kehte hain"
+                textKey="testimonial_heading"
+              />
+            </h2>
+
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
+              {testimonialCards.map((item, idx) => (
+                <article
+                  key={item.no}
+                  data-pop="true"
+                  data-sequence={idx + 1}
+                  className="rounded-2xl border border-maroon/20 bg-white p-5 shadow-[0_12px_24px_rgba(111,28,20,0.08)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(111,28,20,0.12)]"
+                >
+                  <p className="text-xs font-semibold tracking-[0.15em] text-deep-saffron">{item.no}</p>
+                  <p className="mt-3 text-base font-medium text-maroon">“{item.quote}”</p>
+                  <p className="mt-4 text-sm text-maroon/70">{item.name}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section-divider bg-ink py-16 sm:py-20">
+          <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
+            <h2 data-reveal className="text-3xl font-semibold sm:text-4xl">
+              <LangText
+                en="Everything Needed for a Smooth Yatra"
+                hi="सुगम यात्रा के लिए हर आवश्यक व्यवस्था"
+                hing="Smooth yatra ke liye har zaroori vyavastha"
+                textKey="feature_heading"
+              />
+            </h2>
+
+            <ul className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {features.map((item, idx) => (
+                <li
+                  key={item}
+                  data-pop="true"
+                  data-sequence={idx + 1}
+                  className="glass rounded-xl p-4 text-sm text-cream/85 sm:text-base"
+                >
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
         </section>
 
         <section id="timeline" className="section-divider bg-cream py-16 text-ink sm:py-20">
-        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
-          <h2 data-reveal className="text-3xl font-semibold text-maroon sm:text-4xl">
-            Yatra Timeline Updates
-          </h2>
-          <p data-reveal data-sequence={1} className="mt-3 max-w-3xl text-maroon/80 sm:text-lg">
-            Track all major stop points, timings and updates of the procession in one place.
-          </p>
+          <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
+            <h2 data-reveal className="text-3xl font-semibold text-maroon sm:text-4xl">
+              Yatra Timeline Updates
+            </h2>
+            <p data-reveal data-sequence={1} className="mt-3 max-w-3xl text-maroon/80 sm:text-lg">
+              Track all major stop points, timings and updates of the procession in one place.
+            </p>
 
-          <div className="mt-8 grid gap-3 sm:gap-4">
-            {yatraTimeline.map((point, idx) => (
-              <article
-                key={`${point.time}-${point.place}-${idx}`}
-                data-pop="true"
-                data-sequence={idx + 1}
-                className="rounded-2xl border border-maroon/22 bg-white/95 px-4 py-4 shadow-[0_12px_28px_rgba(111,28,20,0.08)] sm:px-5"
-              >
-                <div className="grid gap-2 sm:grid-cols-[130px_1fr] sm:items-center">
-                  <p className="text-base font-bold text-deep-saffron sm:text-lg">{point.time}</p>
-                  <div>
-                    <p className="text-base font-semibold text-maroon sm:text-lg">{point.place}</p>
-                    {point.note ? <p className="mt-1 text-sm text-maroon/76">{point.note}</p> : null}
+            <div className="mt-8 grid gap-3 sm:gap-4">
+              {yatraTimeline.map((point, idx) => (
+                <article
+                  key={`${point.time}-${point.place}-${idx}`}
+                  data-pop="true"
+                  data-sequence={idx + 1}
+                  className="rounded-2xl border border-maroon/22 bg-white/95 px-4 py-4 shadow-[0_12px_28px_rgba(111,28,20,0.08)] sm:px-5"
+                >
+                  <div className="grid gap-2 sm:grid-cols-[130px_1fr] sm:items-center">
+                    <p className="text-base font-bold text-deep-saffron sm:text-lg">{point.time}</p>
+                    <div>
+                      <p className="text-base font-semibold text-maroon sm:text-lg">{point.place}</p>
+                      {point.note ? <p className="mt-1 text-sm text-maroon/76">{point.note}</p> : null}
+                    </div>
                   </div>
-                </div>
-              </article>
-            ))}
+                </article>
+              ))}
+            </div>
           </div>
-        </div>
         </section>
 
         <section id="newsletter" className="section-divider bg-ink py-16 sm:py-20">
-        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
-          <h2 data-reveal className="text-3xl font-semibold text-cream sm:text-4xl">
-            Newsletter & Community Posts
-          </h2>
-          <p data-reveal data-sequence={1} className="mt-3 max-w-3xl text-cream/78 sm:text-lg">
-            Regular updates from ground volunteers, route teams, and seva announcements.
-          </p>
+          <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
+            <h2 data-reveal className="text-3xl font-semibold text-cream sm:text-4xl">
+              Newsletter & Community Posts
+            </h2>
+            <p data-reveal data-sequence={1} className="mt-3 max-w-3xl text-cream/78 sm:text-lg">
+              Regular updates from ground volunteers, route teams, and seva announcements.
+            </p>
 
-          <div className="mt-8 grid gap-4 lg:grid-cols-2">
-            {newsletterPosts.map((post, idx) => (
-              <article key={`${post.title}-${idx}`} data-pop="true" data-sequence={idx + 1} className="glass rounded-2xl p-4 sm:p-5">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h3 className="text-lg font-semibold text-gold sm:text-xl">{post.title}</h3>
-                  <p className="text-xs uppercase tracking-[0.14em] text-cream/60">
-                    {Number.isNaN(new Date(post.date).getTime())
-                      ? post.date
-                      : new Date(post.date).toLocaleDateString("en-IN", {
+            <div className="mt-8 grid gap-4 lg:grid-cols-2">
+              {newsletterPosts.map((post, idx) => (
+                <article key={`${post.title}-${idx}`} data-pop="true" data-sequence={idx + 1} className="glass rounded-2xl p-4 sm:p-5">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h3 className="text-lg font-semibold text-gold sm:text-xl">{post.title}</h3>
+                    <p className="text-xs uppercase tracking-[0.14em] text-cream/60">
+                      {Number.isNaN(new Date(post.date).getTime())
+                        ? post.date
+                        : new Date(post.date).toLocaleDateString("en-IN", {
                           day: "2-digit",
                           month: "short",
                           year: "numeric"
                         })}
-                  </p>
-                </div>
-                <p className="mt-3 text-sm leading-relaxed text-cream/85 sm:text-base">{post.content}</p>
-                {post.image ? (
-                  <Image
-                    src={post.image}
-                    alt={post.title}
-                    width={880}
-                    height={460}
-                    className="mt-4 h-48 w-full rounded-xl object-cover"
-                  />
-                ) : null}
-              </article>
-            ))}
+                    </p>
+                  </div>
+                  <p className="mt-3 text-sm leading-relaxed text-cream/85 sm:text-base">{post.content}</p>
+                  {post.image ? (
+                    <Image
+                      src={post.image}
+                      alt={post.title}
+                      width={880}
+                      height={460}
+                      className="mt-4 h-48 w-full rounded-xl object-cover"
+                    />
+                  ) : null}
+                </article>
+              ))}
+            </div>
           </div>
-        </div>
         </section>
 
         <section id="gallery" className="section-divider bg-cream py-16 text-ink sm:py-20">
-        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
-          <h2 data-reveal className="text-3xl font-semibold text-maroon sm:text-4xl">
-            <LangText
-              en="Sacred Moments from Previous Yatras"
-              hi="पिछली यात्राओं के पावन क्षण"
-              hing="Previous yatra ke pavitra moments"
-              textKey="gallery_heading"
-            />
-          </h2>
+          <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
+            <h2 data-reveal className="text-3xl font-semibold text-maroon sm:text-4xl">
+              <LangText
+                en="Sacred Moments from Previous Yatras"
+                hi="पिछली यात्राओं के पावन क्षण"
+                hing="Previous yatra ke pavitra moments"
+                textKey="gallery_heading"
+              />
+            </h2>
 
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {galleryItems.map((src, idx) => (
-              <figure
-                key={src}
-                data-pop="true"
-                data-sequence={idx + 1}
-                className="overflow-hidden rounded-2xl border border-maroon/20 bg-white"
-              >
-                <Image
-                  src={src}
-                  alt={`Yatra gallery ${idx + 1}`}
-                  width={680}
-                  height={440}
-                  className="h-56 w-full object-cover transition duration-500 hover:scale-105"
-                />
-              </figure>
-            ))}
+            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {galleryItems.map((src, idx) => (
+                <figure
+                  key={src}
+                  data-pop="true"
+                  data-sequence={idx + 1}
+                  className="overflow-hidden rounded-2xl border border-maroon/20 bg-white"
+                >
+                  <Image
+                    src={src}
+                    alt={`Yatra gallery ${idx + 1}`}
+                    width={680}
+                    height={440}
+                    className="h-56 w-full object-cover transition-transform duration-500 hover:scale-110"
+                  />
+                </figure>
+              ))}
+            </div>
           </div>
-        </div>
         </section>
 
         <section className="section-divider bg-ink py-16 sm:py-20">
-        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
-          <h2 data-reveal className="text-3xl font-semibold sm:text-4xl">
-            <LangText
-              en="Bhakti Across the Community"
-              hi="समुदाय में गूंजती भक्ति"
-              hing="Community bhar mein goonjti bhakti"
-              textKey="community_heading"
-            />
-          </h2>
+          <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
+            <h2 data-reveal className="text-3xl font-semibold sm:text-4xl">
+              <LangText
+                en="Bhakti Across the Community"
+                hi="समुदाय में गूंजती भक्ति"
+                hing="Community bhar mein goonjti bhakti"
+                textKey="community_heading"
+              />
+            </h2>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {communityCards.map((card, idx) => (
-              <article
-                key={card.title}
-                data-pop="true"
-                data-sequence={idx + 1}
-                className="glass rounded-2xl p-5"
-              >
-                <Image
-                  src={card.image}
-                  alt={card.title}
-                  width={420}
-                  height={280}
-                  className="h-40 w-full rounded-xl object-cover"
-                />
-                <h3 className="text-lg font-semibold text-gold">{card.title}</h3>
-                <p className="mt-2 text-sm text-cream/75">{card.text}</p>
-              </article>
-            ))}
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
+              {communityCards.map((card, idx) => (
+                <article
+                  key={card.title}
+                  data-pop="true"
+                  data-sequence={idx + 1}
+                  className="glass rounded-2xl p-5 transition-transform duration-300 hover:-translate-y-1.5 hover:shadow-glass"
+                >
+                  <Image
+                    src={card.image}
+                    alt={card.title}
+                    width={420}
+                    height={280}
+                    className="h-40 w-full rounded-xl object-cover"
+                  />
+                  <h3 className="text-lg font-semibold text-gold">{card.title}</h3>
+                  <p className="mt-2 text-sm text-cream/75">{card.text}</p>
+                </article>
+              ))}
+            </div>
           </div>
-        </div>
         </section>
 
         <section className="section-divider bg-cream py-16 text-ink sm:py-20">
-        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
-          <h2 data-reveal className="text-balance text-3xl font-semibold text-maroon sm:text-4xl lg:text-5xl">
-            <LangText
-              en="Ram Ka Kaaj Hai, Aapka Saath Anmol Hai"
-              hi="राम का काज है, आपका साथ अनमोल है"
-              hing="Ram ka kaaj hai, aapka saath anmol hai"
-              textKey="final_cta_heading"
-            />
-          </h2>
-          <p data-reveal data-sequence={1} className="mt-3 text-lg font-medium text-deep-saffron sm:text-xl">
-            <LangText
-              en="Donate Now and Receive Blessings"
-              hi="अभी दान करें और आशीर्वाद प्राप्त करें"
-              hing="Donate now aur ashirwad paayen"
-              textKey="final_cta_subtitle"
-            />
-          </p>
+          <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
+            <h2 data-reveal className="text-balance text-3xl font-semibold text-maroon sm:text-4xl lg:text-5xl">
+              <LangText
+                en="Ram Ka Kaaj Hai, Aapka Saath Anmol Hai"
+                hi="राम का काज है, आपका साथ अनमोल है"
+                hing="Ram ka kaaj hai, aapka saath anmol hai"
+                textKey="final_cta_heading"
+              />
+            </h2>
+            <p data-reveal data-sequence={1} className="mt-3 text-lg font-medium text-deep-saffron sm:text-xl">
+              <LangText
+                en="Donate Now and Receive Blessings"
+                hi="अभी दान करें और आशीर्वाद प्राप्त करें"
+                hing="Donate now aur ashirwad paayen"
+                textKey="final_cta_subtitle"
+              />
+            </p>
 
-          <div className="mt-8">
-            <DonationForms />
-          </div>
+            <div className="mt-8">
+              <DonationForms />
+            </div>
 
-          <div className="mt-6">
-            <RecentDonations />
-          </div>
+            <div className="mt-6">
+              <RecentDonations />
+            </div>
 
-          <div className="mt-10">
+            <div className="mt-10">
               <article className="mb-6 overflow-hidden rounded-2xl border border-maroon/20 bg-white">
                 <div className="grid gap-4 p-4 sm:grid-cols-[120px_1fr] sm:items-center">
                   <Image
@@ -714,8 +714,8 @@ export function HomePage() {
                   </a>
                 ))}
               </div>
+            </div>
           </div>
-        </div>
         </section>
 
         <footer className="section-divider bg-ink/80 py-16 text-center text-xs text-cream/85 sm:text-sm">

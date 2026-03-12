@@ -156,7 +156,7 @@ export function buildUpiLink({
     params.set("am", String(amount));
   }
 
-  return `upi://pay?${params.toString()}`;
+  return `upi://pay?${params.toString().replace(/\+/g, "%20")}`;
 }
 
 export function isLikelyValidUpiId(upiId: string): boolean {
