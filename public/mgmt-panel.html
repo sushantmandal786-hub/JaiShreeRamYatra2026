@@ -95,6 +95,37 @@
         font-size: 12px;
         opacity: 0.84;
       }
+      .smart-preview-grid {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        margin-top: 8px;
+      }
+      .smart-preview-box {
+        border: 1px solid rgba(244, 195, 90, 0.26);
+        background: rgba(0, 0, 0, 0.26);
+        border-radius: 12px;
+        padding: 10px 12px;
+      }
+      .smart-preview-box b {
+        display: block;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        color: var(--gold);
+        text-transform: uppercase;
+      }
+      .smart-preview-value {
+        margin-top: 6px;
+        min-height: 42px;
+        color: var(--cream);
+        font-size: 14px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+      }
+      summary {
+        cursor: pointer;
+        user-select: none;
+      }
       #status {
         margin-top: 10px;
         font-size: 13px;
@@ -179,6 +210,7 @@
             <div>
               <label>UPI ID (recommended, e.g. 7909041154@ybl)</label>
               <input id="upi-id" type="text" placeholder="7909041154@ybl" />
+              <p class="note">Best practice: set exact UPI ID from your payment app profile (not only mobile number).</p>
             </div>
           </div>
         </div>
@@ -199,7 +231,7 @@
             </div>
             <div>
               <label>Name</label>
-              <input id="organizer-name" type="text" placeholder="Nagesh Samrta" />
+              <input id="organizer-name" type="text" placeholder="Nagesh Samrat" />
             </div>
             <div>
               <label>Designation</label>
@@ -261,51 +293,69 @@
         </div>
 
         <div class="subcard">
-          <h3>Quick Text Editor (English)</h3>
+          <h3>Smart Content Editor (No JSON)</h3>
+          <p class="note">Select a website block, edit text, and click apply. This updates the website text overrides automatically.</p>
           <div class="grid cols-2">
             <div>
-              <label>Hero Title</label>
-              <input id="qt-hero-title" type="text" />
+              <label>Select Website Block</label>
+              <select id="smart-text-key"></select>
+              <p id="smart-text-location" class="note"></p>
             </div>
             <div>
-              <label>Hero Subtitle</label>
-              <input id="qt-hero-subtitle" type="text" />
+              <label>English / Default Text</label>
+              <textarea id="smart-text-en" rows="3" placeholder="Enter English or default text"></textarea>
             </div>
             <div>
-              <label>About Heading</label>
-              <input id="qt-about-heading" type="text" />
+              <label>Hindi Text</label>
+              <textarea id="smart-text-hi" rows="3" placeholder="हिंदी टेक्स्ट लिखें"></textarea>
             </div>
             <div>
-              <label>Impact Heading</label>
-              <input id="qt-impact-heading" type="text" />
+              <label>Hinglish Text</label>
+              <textarea id="smart-text-hing" rows="3" placeholder="Hinglish text likhein"></textarea>
             </div>
-            <div>
-              <label>Transparency Heading</label>
-              <input id="qt-transparency-heading" type="text" />
+          </div>
+          <div>
+            <label>Live Website Preview (current selected block)</label>
+            <div class="smart-preview-grid">
+              <div class="smart-preview-box">
+                <b>EN</b>
+                <div id="smart-preview-en" class="smart-preview-value"></div>
+              </div>
+              <div class="smart-preview-box">
+                <b>HI</b>
+                <div id="smart-preview-hi" class="smart-preview-value"></div>
+              </div>
+              <div class="smart-preview-box">
+                <b>HING</b>
+                <div id="smart-preview-hing" class="smart-preview-value"></div>
+              </div>
             </div>
-            <div>
-              <label>Donate Heading</label>
-              <input id="qt-donate-heading" type="text" />
-            </div>
+          </div>
+          <div class="actions">
+            <button class="ghost" id="smart-load">Load Selected Text</button>
+            <button class="primary" id="smart-apply">Apply Selected Text</button>
           </div>
         </div>
 
-        <label>Text Overrides JSON (full multilingual control: en/hi/hing/sanskrit text as you wish)</label>
-        <textarea
-          id="text-overrides"
-          rows="8"
-          placeholder='{"hero_title":{"en":"...","hi":"...","hing":"..."}}'
-        ></textarea>
-        <p class="note">You can put Sanskrit text in any language field (en/hi/hing) as per your design.</p>
-
-        <details class="note">
-          <summary>Common text keys</summary>
-          <pre>hero_title, hero_subtitle, about_heading, impact_heading, transparency_heading,
-donate_heading, donate_button_primary, donation_desk_call, testimonial_heading, feature_heading,
-gallery_heading, community_heading, final_cta_heading, final_cta_subtitle, donation_form_heading,
-donation_form_subheading, donation_form_submit, volunteer_form_heading, volunteer_form_subheading,
-volunteer_form_submit, whatsapp_desk_label, nav_about, nav_impact, nav_gallery, nav_timeline,
-nav_newsletter, nav_donate</pre>
+        <details class="subcard">
+          <summary>Advanced JSON Editor (Optional)</summary>
+          <label>Text Overrides JSON (full multilingual control: en/hi/hing/sanskrit text as you wish)</label>
+          <textarea
+            id="text-overrides"
+            rows="8"
+            placeholder='{"hero_title":{"en":"...","hi":"...","hing":"..."}}'
+          ></textarea>
+          <p class="note">You can put Sanskrit text in any language field (en/hi/hing) as per your design.</p>
+          <details class="note">
+            <summary>Common text keys</summary>
+            <pre>brand_line_1, brand_line_2, hero_invocation, hero_title, hero_subtitle,
+hero_cta_donate, hero_cta_route, about_heading, impact_heading, transparency_heading,
+donate_heading, donate_button_primary, donation_desk_call, testimonial_heading,
+feature_heading, gallery_heading, community_heading, final_cta_heading, final_cta_subtitle,
+donation_form_heading, donation_form_subheading, donation_form_submit, volunteer_form_heading,
+volunteer_form_subheading, volunteer_form_submit, whatsapp_desk_label, nav_about, nav_impact,
+nav_gallery, nav_timeline, nav_newsletter, nav_donate</pre>
+          </details>
         </details>
 
         <label>Raw JSON (advanced)</label>
@@ -336,14 +386,123 @@ nav_newsletter, nav_donate</pre>
       let organizerUploadImage = null;
       let activityTimer = 0;
 
-      const quickTextMap = [
-        { key: "hero_title", field: "qt-hero-title" },
-        { key: "hero_subtitle", field: "qt-hero-subtitle" },
-        { key: "about_heading", field: "qt-about-heading" },
-        { key: "impact_heading", field: "qt-impact-heading" },
-        { key: "transparency_heading", field: "qt-transparency-heading" },
-        { key: "donate_heading", field: "qt-donate-heading" }
+      const smartTextItems = [
+        { key: "brand_line_1", label: "Header Brand Line 1", location: "Top header (next to logo), first line" },
+        { key: "brand_line_2", label: "Header Brand Line 2", location: "Top header (next to logo), second line" },
+        { key: "hero_invocation", label: "Hero Invocation", location: "Hero section, text above main heading" },
+        { key: "hero_title", label: "Hero Title", location: "Hero section, main heading" },
+        { key: "hero_subtitle", label: "Hero Subtitle", location: "Hero section, description under heading" },
+        { key: "hero_cta_donate", label: "Hero Primary Button", location: "Hero section, yellow donate button" },
+        { key: "hero_cta_route", label: "Hero Secondary Button", location: "Hero section, route details button" },
+        { key: "nav_about", label: "Navigation: About", location: "Top navigation menu" },
+        { key: "nav_impact", label: "Navigation: Impact", location: "Top navigation menu" },
+        { key: "nav_gallery", label: "Navigation: Gallery", location: "Top navigation menu" },
+        { key: "nav_timeline", label: "Navigation: Timeline", location: "Top navigation menu" },
+        { key: "nav_newsletter", label: "Navigation: Newsletter", location: "Top navigation menu" },
+        { key: "nav_donate", label: "Navigation: Donate", location: "Top navigation menu" },
+        { key: "about_heading", label: "About Section Heading", location: "Section: A Yatra Powered by Faith and Unity" },
+        { key: "impact_heading", label: "Impact Section Heading", location: "Section: donation impact blocks" },
+        { key: "transparency_heading", label: "Transparency Heading", location: "Section: fund usage pie chart" },
+        { key: "donate_heading", label: "Donate Section Heading", location: "Section: UPI + QR donation panel" },
+        { key: "donate_button_primary", label: "Donate Main Button", location: "Donate section + sticky donate bar" },
+        { key: "testimonial_heading", label: "Testimonials Heading", location: "Section: devotee testimonials" },
+        { key: "feature_heading", label: "Features Heading", location: "Section: yatra features grid" },
+        { key: "gallery_heading", label: "Gallery Heading", location: "Section: gallery photos" },
+        { key: "community_heading", label: "Community Heading", location: "Section: community moments" },
+        { key: "final_cta_heading", label: "Final CTA Heading", location: "Bottom donation call-to-action block" },
+        { key: "final_cta_subtitle", label: "Final CTA Subtitle", location: "Bottom donation call-to-action block" },
+        { key: "donation_form_heading", label: "Donation Form Heading", location: "Donation form card heading" },
+        { key: "donation_form_subheading", label: "Donation Form Subheading", location: "Donation form card subheading" },
+        { key: "volunteer_form_heading", label: "Volunteer Form Heading", location: "Volunteer form card heading" },
+        { key: "volunteer_form_subheading", label: "Volunteer Form Subheading", location: "Volunteer form card subheading" }
       ];
+
+      const smartTextDefaults = {
+        brand_line_1: { en: "Shri Ram Navami", hi: "श्री राम नवमी", hing: "Shri Ram Navami" },
+        brand_line_2: { en: "Bhavya Shobha Yatra 2026", hi: "भव्य शोभा यात्रा 2026", hing: "Bhavya Shobha Yatra 2026" },
+        hero_invocation: { en: "|| SHRI RAM ||", hi: "॥ श्री राम ॥", hing: "|| SHRI RAM ||" },
+        hero_title: {
+          en: "Shri Ram Navami Bhavya Shobha Yatra 2026",
+          hi: "श्री राम नवमी भव्य शोभा यात्रा 2026",
+          hing: "Shri Ram Navami Bhavya Shobha Yatra 2026"
+        },
+        hero_subtitle: {
+          en: "Join Patna's grand Sanatan celebration and experience bhakti, unity and disciplined seva.",
+          hi: "पटना में आयोजित सनातन धर्म के भव्य उत्सव में शामिल हों। भक्ति, एकता और अनुशासित सेवा का अनुभव करें।",
+          hing: "Patna ke is bhavya Sanatan utsav mein shamil ho aur bhakti, ekta aur seva ka anubhav karo."
+        },
+        hero_cta_donate: { en: "Yatra Hetu Daan Karein", hi: "यात्रा हेतु दान करें", hing: "Yatra hetu daan karein" },
+        hero_cta_route: { en: "Marg Vivaran Dekhein", hi: "मार्ग विवरण देखें", hing: "Marg vivaran dekhein" },
+        nav_about: { en: "About", hi: "परिचय", hing: "About" },
+        nav_impact: { en: "Impact", hi: "प्रभाव", hing: "Impact" },
+        nav_gallery: { en: "Gallery", hi: "गैलरी", hing: "Gallery" },
+        nav_timeline: { en: "Timeline", hi: "समयरेखा", hing: "Timeline" },
+        nav_newsletter: { en: "Newsletter", hi: "अपडेट", hing: "Newsletter" },
+        nav_donate: { en: "Donate", hi: "दान", hing: "Donate" },
+        about_heading: {
+          en: "A Yatra Powered by Faith and Unity",
+          hi: "आस्था और एकता से संचालित भव्य यात्रा",
+          hing: "Aastha aur ekta se chalti bhavya yatra"
+        },
+        impact_heading: {
+          en: "Where Your Donation Creates Real Seva",
+          hi: "जहां आपका दान वास्तविक सेवा बनता है",
+          hing: "Jahan aapka daan real seva mein badalta hai"
+        },
+        transparency_heading: {
+          en: "Complete Transparency in Every Contribution",
+          hi: "हर योगदान में पूर्ण पारदर्शिता",
+          hing: "Har contribution mein complete transparency"
+        },
+        donate_heading: {
+          en: "Simple, Fast and Sacred Way to Donate",
+          hi: "दान का सरल, तेज और पवित्र मार्ग",
+          hing: "Donate karne ka simple, fast aur sacred tareeka"
+        },
+        donate_button_primary: { en: "Donate via UPI", hi: "UPI से दान करें", hing: "UPI se donate karein" },
+        testimonial_heading: {
+          en: "What Devotees Say About the Yatra",
+          hi: "यात्रा के बारे में श्रद्धालुओं की वाणी",
+          hing: "Yatra ke baare mein devotees kya kehte hain"
+        },
+        feature_heading: {
+          en: "Everything Needed for a Smooth Yatra",
+          hi: "सुगम यात्रा के लिए हर आवश्यक व्यवस्था",
+          hing: "Smooth yatra ke liye har zaroori vyavastha"
+        },
+        gallery_heading: {
+          en: "Sacred Moments from Previous Yatras",
+          hi: "पिछली यात्राओं के पावन क्षण",
+          hing: "Previous yatra ke pavitra moments"
+        },
+        community_heading: {
+          en: "Bhakti Across the Community",
+          hi: "समुदाय में गूंजती भक्ति",
+          hing: "Community bhar mein goonjti bhakti"
+        },
+        final_cta_heading: {
+          en: "Ram Ka Kaaj Hai, Aapka Saath Anmol Hai",
+          hi: "राम का काज है, आपका साथ अनमोल है",
+          hing: "Ram ka kaaj hai, aapka saath anmol hai"
+        },
+        final_cta_subtitle: {
+          en: "Donate Now and Receive Blessings",
+          hi: "अभी दान करें और आशीर्वाद प्राप्त करें",
+          hing: "Donate now aur ashirwad paayen"
+        },
+        donation_form_heading: { en: "Donate for Yatra Seva", hi: "यात्रा सेवा हेतु दान", hing: "Yatra seva ke liye donate karein" },
+        donation_form_subheading: {
+          en: "Use UPI instant payment or submit this form for pledge confirmation.",
+          hi: "तुरंत UPI भुगतान करें या प्रतिज्ञा पुष्टि के लिए यह फॉर्म भरें।",
+          hing: "UPI se instant payment karein ya pledge confirmation ke liye form bhariye."
+        },
+        volunteer_form_heading: { en: "Volunteer for Seva", hi: "सेवा हेतु वॉलंटियर बनें", hing: "Seva ke liye volunteer banein" },
+        volunteer_form_subheading: {
+          en: "Join coordination, crowd support, prasad distribution and cleanup seva.",
+          hi: "समन्वय, भीड़ सहयोग, प्रसाद वितरण और स्वच्छता सेवा में शामिल हों।",
+          hing: "Coordination, crowd support, prasad distribution aur cleanup seva mein judiyega."
+        }
+      };
 
       const fields = {
         appsScriptUrl: document.getElementById("apps-script"),
@@ -368,6 +527,14 @@ nav_newsletter, nav_donate</pre>
         volunteerCount: document.getElementById("volunteer-counter"),
         newsletterPosts: document.getElementById("newsletter-posts"),
         yatraTimeline: document.getElementById("yatra-timeline"),
+        smartTextKey: document.getElementById("smart-text-key"),
+        smartTextLocation: document.getElementById("smart-text-location"),
+        smartTextEn: document.getElementById("smart-text-en"),
+        smartTextHi: document.getElementById("smart-text-hi"),
+        smartTextHing: document.getElementById("smart-text-hing"),
+        smartPreviewEn: document.getElementById("smart-preview-en"),
+        smartPreviewHi: document.getElementById("smart-preview-hi"),
+        smartPreviewHing: document.getElementById("smart-preview-hing"),
         textOverrides: document.getElementById("text-overrides"),
         rawJson: document.getElementById("raw-json")
       };
@@ -536,24 +703,95 @@ nav_newsletter, nav_donate</pre>
         });
       }
 
-      function setQuickTextFields(data) {
-        const textOverrides = data.textOverrides || {};
-        quickTextMap.forEach((item) => {
-          const node = document.getElementById(item.field);
-          node.value = textOverrides[item.key]?.en || "";
+      function parseTextOverridesInput() {
+        const raw = fields.textOverrides.value.trim();
+        if (!raw) {
+          return {};
+        }
+        return JSON.parse(raw);
+      }
+
+      function parseTextOverridesInputSafe() {
+        try {
+          return parseTextOverridesInput();
+        } catch {
+          return {};
+        }
+      }
+
+      function setTextOverridesInput(value) {
+        fields.textOverrides.value = JSON.stringify(value || {}, null, 2);
+      }
+
+      function populateSmartTextOptions() {
+        fields.smartTextKey.innerHTML = smartTextItems
+          .map((item) => `<option value="${item.key}">${item.label}</option>`)
+          .join("");
+      }
+
+      function findSmartTextItem(key) {
+        return smartTextItems.find((item) => item.key === key) || smartTextItems[0];
+      }
+
+      function getEffectiveSmartText(key, source) {
+        const override = source[key] || {};
+        const defaults = smartTextDefaults[key] || {};
+        return {
+          en: override.en || defaults.en || "",
+          hi: override.hi || defaults.hi || "",
+          hing: override.hing || defaults.hing || ""
+        };
+      }
+
+      function renderSmartPreview(content) {
+        fields.smartPreviewEn.textContent = content.en || "—";
+        fields.smartPreviewHi.textContent = content.hi || "—";
+        fields.smartPreviewHing.textContent = content.hing || "—";
+      }
+
+      function syncSmartTextEditor() {
+        const selectedKey = fields.smartTextKey.value;
+        const item = findSmartTextItem(selectedKey);
+        fields.smartTextLocation.textContent = item ? `Location: ${item.location}` : "";
+        const source = parseTextOverridesInputSafe();
+        const live = getEffectiveSmartText(selectedKey, source);
+        fields.smartTextEn.value = live.en;
+        fields.smartTextHi.value = live.hi;
+        fields.smartTextHing.value = live.hing;
+        renderSmartPreview(live);
+      }
+
+      function previewSmartTextEditor() {
+        renderSmartPreview({
+          en: fields.smartTextEn.value.trim(),
+          hi: fields.smartTextHi.value.trim(),
+          hing: fields.smartTextHing.value.trim()
         });
       }
 
-      function readQuickTextFields(base) {
-        const textOverrides = { ...(base || {}) };
-        quickTextMap.forEach((item) => {
-          const node = document.getElementById(item.field);
-          const value = node.value.trim();
-          if (value) {
-            textOverrides[item.key] = { ...(textOverrides[item.key] || {}), en: value };
+      function applySmartTextEditor() {
+        try {
+          const selectedKey = fields.smartTextKey.value;
+          const textOverrides = parseTextOverridesInput();
+          const en = fields.smartTextEn.value.trim();
+          const hi = fields.smartTextHi.value.trim();
+          const hing = fields.smartTextHing.value.trim();
+
+          if (!en && !hi && !hing) {
+            delete textOverrides[selectedKey];
+          } else {
+            textOverrides[selectedKey] = {};
+            if (en) textOverrides[selectedKey].en = en;
+            if (hi) textOverrides[selectedKey].hi = hi;
+            if (hing) textOverrides[selectedKey].hing = hing;
           }
-        });
-        return textOverrides;
+
+          setTextOverridesInput(textOverrides);
+          previewSmartTextEditor();
+          setStatus("Selected text updated. Click Save Overrides to publish.");
+        } catch (error) {
+          setStatus("Fix JSON in Advanced editor first, then apply smart text update.", false);
+        }
       }
 
       function loadToFields() {
@@ -577,10 +815,10 @@ nav_newsletter, nav_donate</pre>
         fields.volunteerCount.value = data.counters?.volunteerCount ?? "";
         fields.newsletterPosts.value = data.newsletterPosts ? JSON.stringify(data.newsletterPosts, null, 2) : "";
         fields.yatraTimeline.value = data.yatraTimeline ? JSON.stringify(data.yatraTimeline, null, 2) : "";
-        fields.textOverrides.value = data.textOverrides ? JSON.stringify(data.textOverrides, null, 2) : "";
+        setTextOverridesInput(data.textOverrides || {});
         fields.rawJson.value = "";
-        setQuickTextFields(data);
         loadOrganizerPreview(fields.organizerImage.value || "/assets/nagesh.jpg");
+        syncSmartTextEditor();
       }
 
       function saveOverrides() {
@@ -591,7 +829,7 @@ nav_newsletter, nav_donate</pre>
           const baseTextOverrides = textRaw ? JSON.parse(textRaw) : {};
           const newsletterPosts = newsletterRaw ? JSON.parse(newsletterRaw) : undefined;
           const yatraTimeline = timelineRaw ? JSON.parse(timelineRaw) : undefined;
-          const textOverrides = readQuickTextFields(baseTextOverrides);
+          const textOverrides = baseTextOverrides;
 
           const payload = {
             appsScriptUrl: fields.appsScriptUrl.value.trim() || undefined,
@@ -680,6 +918,18 @@ nav_newsletter, nav_donate</pre>
         loadToFields();
         setStatus("Current overrides loaded.");
       });
+      document.getElementById("smart-load").addEventListener("click", () => {
+        syncSmartTextEditor();
+        setStatus("Selected website text loaded.");
+      });
+      document.getElementById("smart-apply").addEventListener("click", applySmartTextEditor);
+      fields.smartTextKey.addEventListener("change", syncSmartTextEditor);
+      [fields.smartTextEn, fields.smartTextHi, fields.smartTextHing].forEach((field) => {
+        field.addEventListener("input", previewSmartTextEditor);
+      });
+      fields.textOverrides.addEventListener("input", () => {
+        syncSmartTextEditor();
+      });
       document.getElementById("clear").addEventListener("click", () => {
         localStorage.removeItem(STORAGE_KEY);
         loadToFields();
@@ -689,6 +939,8 @@ nav_newsletter, nav_donate</pre>
 
       (function init() {
         initOrganizerImageUploader();
+        populateSmartTextOptions();
+        syncSmartTextEditor();
         const lock = getActiveLock();
         if (lock) {
           showRemainingLockMessage(lock);

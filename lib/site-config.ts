@@ -38,7 +38,7 @@ export const EVENT_DETAILS = {
 } as const;
 
 export const APPS_SCRIPT_ENDPOINT =
-  "https://script.google.com/macros/s/REPLACE_WITH_YOUR_DEPLOYMENT_ID/exec";
+  "https://script.google.com/macros/s/AKfycbw8vH3y9DWFbNVK00filTzgE_UEIChF75osSFIzJRwaI_67sVphTjmi_VK35gzxW4gw/exec";
 
 export const YOUTUBE_EMBED_URL =
   "https://www.youtube.com/embed/5qap5aO4i9A?autoplay=1&loop=1&playlist=5qap5aO4i9A";

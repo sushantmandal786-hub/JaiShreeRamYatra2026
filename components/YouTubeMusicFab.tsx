@@ -89,11 +89,11 @@ export function YouTubeMusicFab() {
   };
 
   return (
-    <div className="fixed right-4 top-[108px] z-50 flex flex-col items-end gap-2">
+    <div className="fixed right-3 top-[136px] z-40 flex flex-col items-end gap-2 sm:right-4 sm:top-[118px]">
       <audio ref={audioRef} src="/assets/ram-chanting-108-times.mp3" loop preload="auto" />
 
       {!isHiddenByScroll && isOpen ? (
-        <div className="glass w-[min(90vw,286px)] rounded-2xl border border-gold/40 p-3 transition">
+        <div className="glass w-[min(86vw,286px)] rounded-2xl border border-gold/40 p-3 transition">
           <p className="text-xs uppercase tracking-[0.14em] text-gold/80">Ram Dhun</p>
           <p className="mt-1 text-sm text-cream/80">Ram Chanting - 108 Times</p>
           <div className="mt-3 flex items-center gap-2">

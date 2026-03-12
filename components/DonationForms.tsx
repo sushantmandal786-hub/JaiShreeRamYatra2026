@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, MouseEvent, useState } from "react";
 import { LangText } from "@/components/LangText";
 import { useDonateSettings } from "@/hooks/useDonateSettings";
 import { submitToAppsScript } from "@/lib/form-submit";
@@ -11,16 +11,35 @@ type FormStatus = "idle" | "loading" | "success" | "error";
 export function DonationForms() {
   const [donationStatus, setDonationStatus] = useState<FormStatus>("idle");
   const [volunteerStatus, setVolunteerStatus] = useState<FormStatus>("idle");
-  const { upiUrl, upiId, upiNumber, donateLabel } = useDonateSettings({ amount: 501 });
-  const upiQuery = useMemo(() => upiUrl.replace(/^upi:\/\/pay\?/, ""), [upiUrl]);
-  const gpayIntent = useMemo(
-    () => `intent://pay?${upiQuery}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`,
-    [upiQuery]
-  );
-  const phonePeIntent = useMemo(
-    () => `intent://pay?${upiQuery}#Intent;scheme=upi;package=com.phonepe.app;end`,
-    [upiQuery]
-  );
+  const {
+    upiUrl,
+    upiId,
+    upiCandidates,
+    upiNumber,
+    upiIntentUrl,
+    gpayIntentUrl,
+    phonepeIntentUrl,
+    paytmIntentUrl,
+    upiIdLooksValid,
+    donateLabel
+  } = useDonateSettings({ amount: 501 });
+
+  const openUpiCheckout = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    const isAndroid = /android/i.test(window.navigator.userAgent);
+
+    if (isAndroid) {
+      window.location.href = upiIntentUrl;
+      window.setTimeout(() => {
+        if (document.visibilityState === "visible") {
+          window.location.href = upiUrl;
+        }
+      }, 700);
+      return;
+    }
+
+    window.location.href = upiUrl;
+  };
 
   const handleDonation = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -88,6 +107,7 @@ export function DonationForms() {
         <div className="mt-4 flex flex-wrap gap-3">
           <a
             href={upiUrl}
+            onClick={openUpiCheckout}
             className="rounded-full bg-saffron px-4 py-2 text-sm font-semibold text-ink transition hover:bg-gold"
           >
             {donateLabel ? (
@@ -112,13 +132,22 @@ export function DonationForms() {
               textKey="whatsapp_desk_label"
             />
           </a>
-          <a href={gpayIntent} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 hover:bg-maroon/5">
+          <a href={gpayIntentUrl} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 hover:bg-maroon/5">
             Open in GPay
           </a>
-          <a href={phonePeIntent} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 hover:bg-maroon/5">
+          <a href={phonepeIntentUrl} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 hover:bg-maroon/5">
             Open in PhonePe
           </a>
+          <a href={paytmIntentUrl} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 hover:bg-maroon/5">
+            Open in Paytm
+          </a>
         </div>
+        {!upiIdLooksValid ? (
+          <p className="mt-2 text-xs text-red-500">
+            UPI ID may be incorrect. Please set exact VPA in admin panel.
+          </p>
+        ) : null}
+        <p className="mt-2 text-xs text-maroon/60">Fallback IDs: {upiCandidates.slice(0, 3).join(" • ")}</p>
 
         <form className="mt-4 space-y-3" onSubmit={handleDonation}>
           <input

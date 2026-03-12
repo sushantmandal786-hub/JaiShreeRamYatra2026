@@ -217,6 +217,25 @@ a {
   animation: ram-forward var(--dur, 2500ms) cubic-bezier(0.15, 0.58, 0.14, 0.95) forwards;
 }
 
+.hero-3d-scene {
+  --hero-tilt-x: 0deg;
+  --hero-tilt-y: 0deg;
+  --hero-shift-x: 0px;
+  --hero-shift-y: 0px;
+  perspective: 1200px;
+}
+
+.hero-bg-depth {
+  transform: translate3d(calc(var(--hero-shift-x) * -0.18), calc(var(--hero-shift-y) * -0.16), 0);
+  transition: transform 0.22s ease-out;
+}
+
+.hero-3d-panel {
+  transform-style: preserve-3d;
+  transform: rotateX(var(--hero-tilt-x)) rotateY(var(--hero-tilt-y));
+  transition: transform 0.22s ease-out;
+}
+
 @keyframes loader-type {
   from {
     clip-path: inset(0 100% 0 0);

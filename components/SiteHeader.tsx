@@ -6,8 +6,6 @@ import { LangText } from "@/components/LangText";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useSiteOverrides } from "@/hooks/useSiteOverrides";
 import { resolveLogoPath } from "@/lib/overrides";
-import { EVENT_DETAILS } from "@/lib/site-config";
-
 const navItems = [
   { href: "#about", en: "About", hi: "परिचय", hing: "About", textKey: "nav_about" },
   { href: "#donation-impact", en: "Impact", hi: "प्रभाव", hing: "Impact", textKey: "nav_impact" },
@@ -39,9 +37,16 @@ export function SiteHeader() {
             className="h-10 w-10 rounded-full border border-gold/50 bg-black/40 object-cover"
           />
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-gold sm:text-base">Shri Ram Navami 2026</p>
-            <p className="truncate text-[10px] uppercase tracking-[0.16em] text-cream/60 sm:text-xs">
-              {EVENT_DETAILS.location}
+            <p className="truncate text-base font-semibold leading-tight text-gold sm:text-lg">
+              <LangText en="Shri Ram Navami" hi="श्री राम नवमी" hing="Shri Ram Navami" textKey="brand_line_1" />
+            </p>
+            <p className="truncate text-[11px] font-medium tracking-[0.04em] text-cream/82 sm:text-sm">
+              <LangText
+                en="Bhavya Shobha Yatra 2026"
+                hi="भव्य शोभा यात्रा 2026"
+                hing="Bhavya Shobha Yatra 2026"
+                textKey="brand_line_2"
+              />
             </p>
           </div>
         </a>
@@ -56,7 +61,7 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-2">
           <a
-            href="/mgmt-panel.html"
+            href="/admin"
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gold/45 text-gold transition hover:bg-gold/10"
             aria-label="Admin Login"
             title="Admin Login"

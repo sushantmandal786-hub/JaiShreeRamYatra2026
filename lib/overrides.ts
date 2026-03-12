@@ -27,15 +27,8 @@ export function readSiteOverrides(): SiteOverrides {
 }
 
 export function resolveUpiId(overrides: SiteOverrides): string {
-  if (overrides.upiId && overrides.upiId.includes("@")) {
-    return overrides.upiId;
-  }
-
-  if (overrides.upiNumber && /^\d+$/.test(overrides.upiNumber)) {
-    return `${overrides.upiNumber}@upi`;
-  }
-
-  return EVENT_DETAILS.primaryUpi;
+  const candidates = resolveUpiIdCandidates(overrides);
+  return candidates.find((item) => isLikelyValidUpiId(item)) ?? candidates[0] ?? EVENT_DETAILS.primaryUpi;
 }
 
 export function resolveUpiNumber(overrides: SiteOverrides): string {
@@ -43,6 +36,32 @@ export function resolveUpiNumber(overrides: SiteOverrides): string {
     return overrides.upiNumber;
   }
   return EVENT_DETAILS.primaryUpiNumber;
+}
+
+export function resolveUpiIdCandidates(overrides: SiteOverrides): string[] {
+  const candidates = new Set<string>();
+  const upiNumber = resolveUpiNumber(overrides);
+  const rawUpi = overrides.upiId?.trim();
+
+  if (rawUpi) {
+    if (rawUpi.includes("@")) {
+      candidates.add(rawUpi.toLowerCase());
+    } else if (/^\d+$/.test(rawUpi)) {
+      candidates.add(`${rawUpi}@ybl`);
+      candidates.add(`${rawUpi}@ibl`);
+      candidates.add(`${rawUpi}@axl`);
+    }
+  }
+
+  if (upiNumber) {
+    candidates.add(`${upiNumber}@ybl`);
+    candidates.add(`${upiNumber}@ibl`);
+    candidates.add(`${upiNumber}@axl`);
+  }
+
+  candidates.add(EVENT_DETAILS.primaryUpi);
+
+  return Array.from(candidates);
 }
 
 export function resolveDonateLabel(overrides: SiteOverrides): string | null {
@@ -138,4 +157,19 @@ export function buildUpiLink({
   }
 
   return `upi://pay?${params.toString()}`;
+}
+
+export function isLikelyValidUpiId(upiId: string): boolean {
+  const value = upiId.trim().toLowerCase();
+  if (!value) {
+    return false;
+  }
+  if (!/^[a-z0-9.\-_]{2,256}@[a-z]{2,64}$/.test(value)) {
+    return false;
+  }
+  // "number@upi" is commonly invalid for real collections.
+  if (value.endsWith("@upi")) {
+    return false;
+  }
+  return true;
 }

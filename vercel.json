@@ -1,4 +1,10 @@
 {
+  "rewrites": [
+    { "source": "/admin", "destination": "/mgmt-panel.html" },
+    { "source": "/admin/", "destination": "/mgmt-panel.html" },
+    { "source": "/mgmt-panel", "destination": "/mgmt-panel.html" },
+    { "source": "/mgmt-panel/", "destination": "/mgmt-panel.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { MouseEvent as ReactMouseEvent, useEffect, useRef, useState } from "react";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { DonationForms } from "@/components/DonationForms";
 import { FundUsagePie } from "@/components/FundUsagePie";
@@ -107,7 +107,7 @@ const communityCards = [
 
 export function HomePage() {
   useScrollAnimations();
-  const { upiUrl, donateLabel } = useDonateSettings({ amount: 501 });
+  const { upiUrl, upiIntentUrl, donateLabel } = useDonateSettings({ amount: 501 });
   const overrides = useSiteOverrides();
   const heroBackground = resolveHeroBackground(overrides);
   const heroOpacity = resolveHeroOpacity(overrides);
@@ -115,10 +115,65 @@ export function HomePage() {
   const newsletterPosts = resolveNewsletterPosts(overrides);
   const yatraTimeline = resolveYatraTimeline(overrides);
   const [organizerImage, setOrganizerImage] = useState(organizer.image);
+  const heroSceneRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     setOrganizerImage(organizer.image);
   }, [organizer.image]);
+
+  useEffect(() => {
+    const section = heroSceneRef.current;
+    if (!section) {
+      return;
+    }
+
+    const supportsFinePointer = window.matchMedia("(pointer: fine)").matches;
+    if (!supportsFinePointer) {
+      return;
+    }
+
+    const onMove = (event: globalThis.MouseEvent) => {
+      const rect = section.getBoundingClientRect();
+      const px = (event.clientX - rect.left) / rect.width - 0.5;
+      const py = (event.clientY - rect.top) / rect.height - 0.5;
+      section.style.setProperty("--hero-tilt-x", `${(-py * 4).toFixed(2)}deg`);
+      section.style.setProperty("--hero-tilt-y", `${(px * 5).toFixed(2)}deg`);
+      section.style.setProperty("--hero-shift-x", `${(px * 18).toFixed(0)}px`);
+      section.style.setProperty("--hero-shift-y", `${(py * 14).toFixed(0)}px`);
+    };
+
+    const onLeave = () => {
+      section.style.setProperty("--hero-tilt-x", "0deg");
+      section.style.setProperty("--hero-tilt-y", "0deg");
+      section.style.setProperty("--hero-shift-x", "0px");
+      section.style.setProperty("--hero-shift-y", "0px");
+    };
+
+    section.addEventListener("mousemove", onMove as EventListener);
+    section.addEventListener("mouseleave", onLeave);
+
+    return () => {
+      section.removeEventListener("mousemove", onMove as EventListener);
+      section.removeEventListener("mouseleave", onLeave);
+    };
+  }, []);
+
+  const openUpiCheckout = (event: ReactMouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    const isAndroid = /android/i.test(window.navigator.userAgent);
+
+    if (isAndroid) {
+      window.location.href = upiIntentUrl;
+      window.setTimeout(() => {
+        if (document.visibilityState === "visible") {
+          window.location.href = upiUrl;
+        }
+      }, 700);
+      return;
+    }
+
+    window.location.href = upiUrl;
+  };
 
   return (
     <main className="bg-ink text-cream" id="top">
@@ -126,49 +181,70 @@ export function HomePage() {
       <SiteHeader />
       <MarqueeTicker />
 
-      <section className="relative h-[225svh] bg-hero-noise">
+      <section ref={heroSceneRef} className="hero-3d-scene relative h-[212svh] bg-hero-noise">
         <div className="pointer-events-none absolute inset-0">
           <Image
             src={heroBackground}
             alt=""
             fill
             priority
-            className="object-cover object-center"
+            className="hero-bg-depth object-cover object-[center_58%] sm:object-[center_52%] lg:object-[center_46%]"
             style={{ opacity: heroOpacity }}
           />
           <div className="absolute inset-0 bg-[linear-gradient(110deg,rgba(15,10,8,0.86)_0%,rgba(15,10,8,0.68)_44%,rgba(15,10,8,0.9)_100%)]" />
         </div>
 
-        <div className="sticky top-[74px] flex h-[calc(100svh-74px)] items-stretch overflow-hidden">
+        <div className="sticky top-[116px] flex h-[calc(100svh-116px)] items-stretch overflow-hidden">
           <HeroParticles />
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
             <HeroMouthChants />
           </div>
 
-          <div className="relative z-10 mx-auto h-full w-full max-w-screen-xl px-4 py-4 sm:px-6 lg:px-8 lg:py-5 xl:px-10">
+          <div className="hero-3d-panel relative z-10 mx-auto h-full w-full max-w-screen-xl px-4 py-4 sm:px-6 lg:px-8 lg:py-5 xl:px-10">
             <div data-hero-reveal className="max-w-3xl space-y-4 lg:absolute lg:left-8 lg:top-8 lg:max-w-[54%]">
+              <p className="text-sm font-semibold tracking-[0.2em] text-gold/95 sm:text-base">
+                <LangText en="|| SHRI RAM ||" hi="॥ श्री राम ॥" hing="|| SHRI RAM ||" textKey="hero_invocation" />
+              </p>
               <h1 className="text-balance text-3xl font-semibold leading-tight tracking-tight text-cream sm:text-4xl lg:text-6xl">
                 <span className="hero-underline">
                   <LangText
-                    en="Join the Grand Shri Ram Navami Shobha Yatra 2026"
-                    hi="भव्य श्री राम नवमी शोभा यात्रा 2026 में शामिल हों"
-                    hing="Grand Shri Ram Navami Shobha Yatra 2026 mein shamil ho"
+                    en="Shri Ram Navami Bhavya Shobha Yatra 2026"
+                    hi="श्री राम नवमी भव्य शोभा यात्रा 2026"
+                    hing="Shri Ram Navami Bhavya Shobha Yatra 2026"
                     textKey="hero_title"
                   />
                 </span>
               </h1>
 
-              <p className="max-w-2xl text-sm text-cream/80 sm:text-lg">
+              <p className="max-w-2xl text-base text-cream/85 sm:text-xl">
                 <LangText
-                  en="Be part of a divine celebration of faith, unity and devotion."
-                  hi="आस्था, एकता और भक्ति के दिव्य उत्सव का हिस्सा बनें।"
-                  hing="Aastha, ekta aur bhakti ke divya utsav ka hissa banein."
+                  en="Join Patna's grand Sanatan celebration and experience bhakti, unity and disciplined seva."
+                  hi="पटना में आयोजित सनातन धर्म के भव्य उत्सव में शामिल हों। भक्ति, एकता और अनुशासित सेवा का अनुभव करें।"
+                  hing="Patna ke is bhavya Sanatan utsav mein shamil ho aur bhakti, ekta aur seva ka anubhav karo."
                   textKey="hero_subtitle"
                 />
               </p>
+
+              <div className="flex flex-wrap gap-3">
+                <a
+                  href={upiUrl}
+                  onClick={openUpiCheckout}
+                  className="rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-saffron"
+                >
+                  {donateLabel || (
+                    <LangText en="Yatra Hetu Daan Karein" hi="यात्रा हेतु दान करें" hing="Yatra hetu daan karein" textKey="hero_cta_donate" />
+                  )}
+                </a>
+                <a
+                  href="#timeline"
+                  className="rounded-full border border-cream/65 px-5 py-2.5 text-sm font-semibold text-cream transition hover:bg-white/10"
+                >
+                  <LangText en="Marg Vivaran Dekhein" hi="मार्ग विवरण देखें" hing="Marg vivaran dekhein" textKey="hero_cta_route" />
+                </a>
+              </div>
             </div>
 
-            <div data-hero-reveal className="mt-4 max-w-[220px] lg:mt-0 lg:absolute lg:bottom-12 lg:left-6 lg:w-[220px]">
+            <div data-hero-reveal className="mt-3 max-w-[202px] lg:mt-0 lg:absolute lg:bottom-8 lg:left-6 lg:w-[202px]">
               <div className="glass flex items-center gap-2 rounded-xl p-2">
                 <Image
                   src={organizerImage}
@@ -179,18 +255,18 @@ export function HomePage() {
                   className="h-9 w-9 rounded-full border border-gold/45 object-cover"
                 />
                 <div className="min-w-0">
-                  <p className="text-[9px] uppercase tracking-[0.14em] text-gold/85">Organised by</p>
+                  <p className="text-[8px] uppercase tracking-[0.14em] text-gold/85">Organised by</p>
                   <p className="truncate text-xs font-semibold text-cream">{organizer.name}</p>
                 </div>
               </div>
             </div>
 
-            <div className="mt-5 lg:absolute lg:bottom-10 lg:left-1/2 lg:w-full lg:max-w-[620px] lg:-translate-x-1/2">
+            <div className="mt-5 lg:absolute lg:bottom-8 lg:left-1/2 lg:w-full lg:max-w-[620px] lg:-translate-x-1/2">
               <div data-hero-reveal>
                 <CountdownTimer />
               </div>
-              <div data-hero-reveal className="mx-auto mt-2 w-fit max-w-[96vw] rounded-xl border border-gold/35 bg-[linear-gradient(120deg,rgba(255,253,247,0.18),rgba(255,253,247,0.1))] px-3 py-2 backdrop-blur md:px-4">
-                <div className="flex flex-wrap items-center justify-center gap-2 text-center text-[10px] text-cream/88 sm:text-[11px]">
+              <div data-hero-reveal className="mx-auto mt-2 w-fit max-w-[95vw] rounded-xl border border-gold/35 bg-[linear-gradient(120deg,rgba(255,253,247,0.18),rgba(255,253,247,0.1))] px-3 py-2 backdrop-blur md:px-4">
+                <div className="flex flex-wrap items-center justify-center gap-2 text-center text-[10px] text-cream/90 sm:text-[11px]">
                   <span className="font-semibold text-gold">Date & Time:</span>
                   <span>{EVENT_DETAILS.dateLabel}</span>
                   <a
@@ -312,6 +388,7 @@ export function HomePage() {
             <div data-reveal data-sequence={3} className="mt-6 flex flex-wrap gap-3">
               <a
                 href={upiUrl}
+                onClick={openUpiCheckout}
                 className="rounded-full bg-saffron px-5 py-3 text-sm font-semibold text-ink transition hover:bg-gold"
               >
                 {donateLabel ? (
