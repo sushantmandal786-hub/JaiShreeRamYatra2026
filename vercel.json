@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build && cp .next/routes-manifest.json out/routes-manifest.json && cp .next/prerender-manifest.json out/prerender-manifest.json && cp .next/build-manifest.json out/build-manifest.json && cp .next/app-build-manifest.json out/app-build-manifest.json",
   "outputDirectory": "out",
   "rewrites": [
     { "source": "/admin", "destination": "/mgmt-panel.html" },
