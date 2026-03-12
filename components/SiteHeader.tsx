@@ -61,7 +61,7 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-2">
           <a
-            href="/admin"
+            href="/mgmt-panel.html"
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gold/45 text-gold transition hover:bg-gold/10"
             aria-label="Admin Login"
             title="Admin Login"

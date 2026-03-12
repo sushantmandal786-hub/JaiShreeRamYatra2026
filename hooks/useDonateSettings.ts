@@ -7,7 +7,8 @@ import {
   resolveUpiId,
   resolveUpiIdCandidates,
   isLikelyValidUpiId,
-  resolveUpiNumber
+  resolveUpiNumber,
+  resolveOrganizer
 } from "@/lib/overrides";
 import { useSiteOverrides } from "@/hooks/useSiteOverrides";
 
@@ -41,15 +42,17 @@ export function useDonateSettings(options: UseDonateSettingsOptions = {}): Donat
   const upiIdLooksValid = useMemo(() => isLikelyValidUpiId(upiId), [upiId]);
   const donateLabel = useMemo(() => resolveDonateLabel(overrides), [overrides]);
 
+  const organizerName = useMemo(() => resolveOrganizer(overrides).name, [overrides]);
+
   const upiUrl = useMemo(
     () =>
       buildUpiLink({
         upiId,
-        payeeName: "Shri Ram Navami Yatra",
+        payeeName: organizerName,
         amount: options.amount,
         note: options.note ?? "Shri Ram Navami Shobha Yatra Donation"
       }),
-    [options.amount, options.note, upiId]
+    [options.amount, options.note, upiId, organizerName]
   );
 
   const upiQuery = useMemo(() => upiUrl.replace(/^upi:\/\/pay\?/, ""), [upiUrl]);
