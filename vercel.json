@@ -1,6 +1,8 @@
 {
-  "buildCommand": "npm run build && cp .next/routes-manifest.json out/routes-manifest.json && cp .next/prerender-manifest.json out/prerender-manifest.json && cp .next/build-manifest.json out/build-manifest.json && cp .next/app-build-manifest.json out/app-build-manifest.json",
-  "outputDirectory": "out",
+  /**
+   * Let Vercel use the default Next.js build pipeline.
+   * We only keep routing and headers configuration here.
+   */
   "rewrites": [
     { "source": "/admin", "destination": "/mgmt-panel.html" },
     { "source": "/admin/", "destination": "/mgmt-panel.html" },

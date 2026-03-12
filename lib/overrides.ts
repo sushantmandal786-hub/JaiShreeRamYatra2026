@@ -43,6 +43,11 @@ export function resolveUpiIdCandidates(overrides: SiteOverrides): string[] {
   const candidates = new Set<string>();
   const upiNumber = resolveUpiNumber(overrides);
   const rawUpi = overrides.upiId?.trim();
+  const primaryUpi = EVENT_DETAILS.primaryUpi;
+
+  if (!rawUpi && primaryUpi) {
+    candidates.add(primaryUpi);
+  }
 
   if (rawUpi) {
     if (rawUpi.includes("@")) {
@@ -60,7 +65,9 @@ export function resolveUpiIdCandidates(overrides: SiteOverrides): string[] {
     candidates.add(`${upiNumber}@okaxis`);
   }
 
-  candidates.add(EVENT_DETAILS.primaryUpi);
+  if (primaryUpi) {
+    candidates.add(primaryUpi);
+  }
 
   return Array.from(candidates);
 }

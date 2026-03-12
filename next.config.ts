@@ -1,20 +1,14 @@
 import type { NextConfig } from "next";
 
-const isGithubActions = process.env.GITHUB_ACTIONS === "true";
-const repositoryName = process.env.GITHUB_REPOSITORY?.split("/")[1] ?? "";
-const pagesBasePath = process.env.PAGES_BASE_PATH ?? (isGithubActions && repositoryName ? `/${repositoryName}` : "");
-
 const nextConfig: NextConfig = {
-  output: "export",
+  /**
+   * Use the standard Next.js output on Vercel so that:
+   * - The framework handles routing and static assets (including /public/mgmt-panel.html)
+   * - We avoid the legacy static export mode, which is not recommended on Vercel
+   */
   typedRoutes: true,
   outputFileTracingRoot: process.cwd(),
   trailingSlash: false,
-  ...(pagesBasePath
-    ? {
-      basePath: pagesBasePath,
-      assetPrefix: pagesBasePath
-    }
-    : {}),
   images: {
     unoptimized: true
   }
