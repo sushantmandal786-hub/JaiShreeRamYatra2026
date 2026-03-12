@@ -176,6 +176,7 @@
             <div>
               <label>Google Apps Script URL (form submit)</label>
               <input id="apps-script" type="url" placeholder="https://script.google.com/macros/s/.../exec" />
+              <p class="note">Same URL is used for cloud sync of admin changes.</p>
             </div>
             <div>
               <label>Donation Feed URL (Google Sheet/API JSON)</label>
@@ -205,11 +206,11 @@
             </div>
             <div>
               <label>UPI Number</label>
-              <input id="upi-number" type="text" inputmode="numeric" placeholder="7909041154" />
+              <input id="upi-number" type="text" inputmode="numeric" placeholder="8651352594" />
             </div>
             <div>
               <label>UPI ID (recommended, e.g. 7909041154@ybl)</label>
-              <input id="upi-id" type="text" placeholder="7909041154@ybl" />
+              <input id="upi-id" type="text" placeholder="samratnagesh@okaxis" />
               <p class="note">Best practice: set exact UPI ID from your payment app profile (not only mobile number).</p>
             </div>
           </div>
@@ -372,6 +373,8 @@ nav_gallery, nav_timeline, nav_newsletter, nav_donate</pre>
 
     <script>
       const STORAGE_KEY = "shri_ram_overrides";
+      const DEFAULT_APPS_SCRIPT_ENDPOINT =
+        "https://script.google.com/macros/s/AKfycbw8vH3y9DWFbNVK00filTzgE_UEIChF75osSFIzJRwaI_67sVphTjmi_VK35gzxW4gw/exec";
       const PASSWORD_HASH = "e50b3490a450b33cd01011e276322ffec7a82b7dd88b8916cdcbb9e21c66db08";
       const AUTH_KEY = "shri_ram_admin_auth_v1";
       const LOCK_KEY = "shri_ram_admin_lock_v1";
@@ -872,9 +875,34 @@ nav_gallery, nav_timeline, nav_newsletter, nav_donate</pre>
 
           localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
           window.dispatchEvent(new Event("shri-ram-overrides-change"));
-          setStatus("Overrides saved successfully.");
+          setStatus("Overrides saved locally. Syncing to cloud...");
+          syncOverridesToCloud(next);
         } catch (error) {
           setStatus("Invalid JSON in Text Overrides or Raw JSON.", false);
+        }
+      }
+
+      async function syncOverridesToCloud(payload) {
+        const endpoint = (payload.appsScriptUrl || fields.appsScriptUrl.value || DEFAULT_APPS_SCRIPT_ENDPOINT || "").trim();
+        if (!endpoint) {
+          setStatus("Saved locally. Add Apps Script URL to enable cloud sync.", false);
+          return;
+        }
+
+        try {
+          const url = new URL(endpoint);
+          url.searchParams.set("mode", "overrides");
+          const response = await fetch(url.toString(), {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          if (!response.ok) {
+            throw new Error("cloud sync failed");
+          }
+          setStatus("Saved locally and synced to cloud.");
+        } catch (error) {
+          setStatus("Saved locally, but cloud sync failed. Check Apps Script permissions.", false);
         }
       }
 

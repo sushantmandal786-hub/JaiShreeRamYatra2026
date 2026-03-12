@@ -74,6 +74,11 @@ const bootstrapLanguageScript = `
     applyLanguage(window.__getSiteLang());
   });
 
+  window.addEventListener("storage", function (event) {
+    if (event && event.key && event.key !== "shri_ram_overrides") return;
+    applyLanguage(window.__getSiteLang());
+  });
+
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
       applyLanguage(lang);

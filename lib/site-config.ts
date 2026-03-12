@@ -31,8 +31,8 @@ export const EVENT_DETAILS = {
     "Shri Ram Navami Shobha Yatra Samiti, Patna, Bihar"
   ],
   contacts: ["8651352594", "9525407043", "9693597872", "77759941329", "79797800991"],
-  primaryUpiNumber: "7909041154",
-  primaryUpi: "7909041154@upi",
+  primaryUpiNumber: "8651352594",
+  primaryUpi: "samratnagesh@okaxis",
   fallbackDateIso: "2027-04-15T13:00:00+05:30",
   eventDateIso: "2026-03-27T13:00:00+05:30"
 } as const;

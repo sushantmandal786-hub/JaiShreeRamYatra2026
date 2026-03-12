@@ -1,4 +1,5 @@
 import {
+  APPS_SCRIPT_ENDPOINT,
   DEFAULT_NEWSLETTER_POSTS,
   DEFAULT_ORGANIZER,
   DEFAULT_YATRA_TIMELINE,
@@ -50,6 +51,7 @@ export function resolveUpiIdCandidates(overrides: SiteOverrides): string[] {
       candidates.add(`${rawUpi}@ybl`);
       candidates.add(`${rawUpi}@ibl`);
       candidates.add(`${rawUpi}@axl`);
+      candidates.add(`${rawUpi}@okaxis`);
     }
   }
 
@@ -57,6 +59,7 @@ export function resolveUpiIdCandidates(overrides: SiteOverrides): string[] {
     candidates.add(`${upiNumber}@ybl`);
     candidates.add(`${upiNumber}@ibl`);
     candidates.add(`${upiNumber}@axl`);
+    candidates.add(`${upiNumber}@okaxis`);
   }
 
   candidates.add(EVENT_DETAILS.primaryUpi);
@@ -172,4 +175,43 @@ export function isLikelyValidUpiId(upiId: string): boolean {
     return false;
   }
   return true;
+}
+
+export async function fetchRemoteOverrides(): Promise<SiteOverrides | null> {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  let endpoint = APPS_SCRIPT_ENDPOINT;
+  try {
+    const raw = localStorage.getItem(OVERRIDE_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw) as SiteOverrides;
+      if (parsed.appsScriptUrl && parsed.appsScriptUrl.startsWith("https://")) {
+        endpoint = parsed.appsScriptUrl;
+      }
+    }
+  } catch {
+    // ignore malformed local storage
+  }
+
+  if (!endpoint) {
+    return null;
+  }
+
+  try {
+    const url = new URL(endpoint);
+    url.searchParams.set("mode", "overrides");
+    const response = await fetch(url.toString(), { cache: "no-store" });
+    if (!response.ok) {
+      return null;
+    }
+    const data = (await response.json()) as SiteOverrides;
+    if (!data || typeof data !== "object") {
+      return null;
+    }
+    return data;
+  } catch {
+    return null;
+  }
 }

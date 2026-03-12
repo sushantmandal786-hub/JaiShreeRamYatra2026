@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { readSiteOverrides } from "@/lib/overrides";
+import { fetchRemoteOverrides, readSiteOverrides } from "@/lib/overrides";
 import { OVERRIDE_STORAGE_KEY, type SiteOverrides } from "@/lib/site-config";
 
 export function useSiteOverrides() {
@@ -10,6 +10,35 @@ export function useSiteOverrides() {
   useEffect(() => {
     const load = () => setOverrides(readSiteOverrides());
     load();
+
+    const syncRemote = async () => {
+      const base = readSiteOverrides();
+      const remote = await fetchRemoteOverrides();
+      if (!remote || Object.keys(remote).length === 0) {
+        return;
+      }
+
+      const merged: SiteOverrides = {
+        ...base,
+        ...remote,
+        hero: { ...(base.hero || {}), ...(remote.hero || {}) },
+        buttons: { ...(base.buttons || {}), ...(remote.buttons || {}) },
+        organizer: { ...(base.organizer || {}), ...(remote.organizer || {}) },
+        counters: { ...(base.counters || {}), ...(remote.counters || {}) },
+        textOverrides: { ...(base.textOverrides || {}), ...(remote.textOverrides || {}) }
+      };
+
+      try {
+        localStorage.setItem(OVERRIDE_STORAGE_KEY, JSON.stringify(merged));
+        window.dispatchEvent(new Event("shri-ram-overrides-change"));
+      } catch {
+        // ignore localStorage errors
+      }
+
+      setOverrides(merged);
+    };
+
+    void syncRemote();
 
     const onStorage = (event: StorageEvent) => {
       if (event.key && event.key !== OVERRIDE_STORAGE_KEY) {
