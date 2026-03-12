@@ -39,6 +39,14 @@ export function useSiteOverrides() {
     };
 
     void syncRemote();
+    const interval = window.setInterval(syncRemote, 30000);
+
+    const onFocus = () => {
+      void syncRemote();
+    };
+
+    document.addEventListener("visibilitychange", onFocus);
+    window.addEventListener("focus", onFocus);
 
     const onStorage = (event: StorageEvent) => {
       if (event.key && event.key !== OVERRIDE_STORAGE_KEY) {
@@ -55,6 +63,9 @@ export function useSiteOverrides() {
     return () => {
       window.removeEventListener("storage", onStorage);
       window.removeEventListener("shri-ram-overrides-change", onCustomUpdate);
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onFocus);
+      window.clearInterval(interval);
     };
   }, []);
 
