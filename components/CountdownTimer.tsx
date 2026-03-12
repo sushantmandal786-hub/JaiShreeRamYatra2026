@@ -21,6 +21,8 @@ function diff(target: number): Countdown {
 }
 
 export function CountdownTimer() {
+  const [mounted, setMounted] = useState(false);
+
   const target = useMemo(() => {
     const primary = new Date(EVENT_DETAILS.eventDateIso).getTime();
     const fallback = new Date(EVENT_DETAILS.fallbackDateIso).getTime();
@@ -30,6 +32,7 @@ export function CountdownTimer() {
   const [time, setTime] = useState<Countdown>(() => diff(target));
 
   useEffect(() => {
+    setMounted(true);
     const id = setInterval(() => setTime(diff(target)), 1000);
     return () => clearInterval(id);
   }, [target]);
@@ -40,6 +43,12 @@ export function CountdownTimer() {
     ["Minutes", time.minutes],
     ["Seconds", time.seconds]
   ] as const;
+
+  if (!mounted) {
+    return (
+      <div className="glass grid grid-cols-4 gap-2 rounded-2xl p-3 sm:p-4 min-h-[100px]" />
+    );
+  }
 
   return (
     <div className="glass grid grid-cols-4 gap-2 rounded-2xl p-3 sm:p-4">

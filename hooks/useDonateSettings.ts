@@ -50,33 +50,18 @@ export function useDonateSettings(options: UseDonateSettingsOptions = {}): Donat
         upiId,
         payeeName: organizerName,
         amount: options.amount,
-        note: options.note ?? "Shri Ram Navami Shobha Yatra Donation"
+        note: options.note ?? "Shri Ram Navami Yatra Donation"
       }),
     [options.amount, options.note, upiId, organizerName]
   );
 
   const upiQuery = useMemo(() => upiUrl.replace(/^upi:\/\/pay\?/, ""), [upiUrl]);
   const upiIntentUrl = useMemo(() => `intent://pay?${upiQuery}#Intent;scheme=upi;end`, [upiQuery]);
-  const gpayIntentUrl = useMemo(
-    () => `intent://pay?${upiQuery}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`,
-    [upiQuery]
-  );
-  const phonepeIntentUrl = useMemo(
-    () => `intent://pay?${upiQuery}#Intent;scheme=upi;package=com.phonepe.app;end`,
-    [upiQuery]
-  );
-  const paytmIntentUrl = useMemo(
-    () => `intent://pay?${upiQuery}#Intent;scheme=upi;package=net.one97.paytm;end`,
-    [upiQuery]
-  );
-  const bhimIntentUrl = useMemo(
-    () => `intent://pay?${upiQuery}#Intent;scheme=upi;package=in.org.npci.upiapp;end`,
-    [upiQuery]
-  );
-  const credIntentUrl = useMemo(
-    () => `intent://pay?${upiQuery}#Intent;scheme=upi;package=com.dreamplug.androidapp;end`,
-    [upiQuery]
-  );
+  const gpayIntentUrl = useMemo(() => `tez://upi/pay?${upiQuery}`, [upiQuery]);
+  const phonepeIntentUrl = useMemo(() => `phonepe://pay?${upiQuery}`, [upiQuery]);
+  const paytmIntentUrl = useMemo(() => `paytmmp://pay?${upiQuery}`, [upiQuery]);
+  const bhimIntentUrl = useMemo(() => `bhim://pay?${upiQuery}`, [upiQuery]);
+  const credIntentUrl = useMemo(() => `credpay://upi/pay?${upiQuery}`, [upiQuery]);
   const amazonIntentUrl = useMemo(
     () => `intent://pay?${upiQuery}#Intent;scheme=upi;package=in.amazon.mShop.android.shopping;end`,
     [upiQuery]

@@ -8,12 +8,12 @@ const nextConfig: NextConfig = {
   output: "export",
   typedRoutes: true,
   outputFileTracingRoot: process.cwd(),
-  trailingSlash: true,
+  trailingSlash: false,
   ...(pagesBasePath
     ? {
-        basePath: pagesBasePath,
-        assetPrefix: pagesBasePath
-      }
+      basePath: pagesBasePath,
+      assetPrefix: pagesBasePath
+    }
     : {}),
   images: {
     unoptimized: true

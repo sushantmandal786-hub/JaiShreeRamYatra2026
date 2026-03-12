@@ -53,9 +53,7 @@ export function resolveUpiIdCandidates(overrides: SiteOverrides): string[] {
       candidates.add(`${rawUpi}@axl`);
       candidates.add(`${rawUpi}@okaxis`);
     }
-  }
-
-  if (upiNumber) {
+  } else if (upiNumber) {
     candidates.add(`${upiNumber}@ybl`);
     candidates.add(`${upiNumber}@ibl`);
     candidates.add(`${upiNumber}@axl`);
@@ -167,11 +165,8 @@ export function isLikelyValidUpiId(upiId: string): boolean {
   if (!value) {
     return false;
   }
-  if (!/^[a-z0-9.\-_]{2,256}@[a-z]{2,64}$/.test(value)) {
-    return false;
-  }
-  // "number@upi" is commonly invalid for real collections.
-  if (value.endsWith("@upi")) {
+  // Allow full numbers (e.g. 8651352594@ybl) and standard VPAs.
+  if (!/^[a-z0-9.\-_]{2,256}@[a-z0-9A-Z]{2,64}$/.test(value)) {
     return false;
   }
   return true;

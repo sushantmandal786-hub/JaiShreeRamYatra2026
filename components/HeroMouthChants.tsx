@@ -14,17 +14,18 @@ type Chant = {
 
 const CHANT_TEXT = ["राम", "राम", "श्री राम", "राम राम", "जय श्री राम"];
 
+let globalId = 1;
+
 export function HeroMouthChants() {
   const [chants, setChants] = useState<Chant[]>([]);
 
   const seedTexts = useMemo(() => CHANT_TEXT, []);
 
   useEffect(() => {
-    let id = 1;
     const spawn = () => {
       const count = 3 + Math.floor(Math.random() * 2);
       const batch: Chant[] = Array.from({ length: count }).map((_, index) => ({
-        id: id++,
+        id: globalId++,
         text: seedTexts[Math.floor(Math.random() * seedTexts.length)],
         dx: 56 + Math.random() * 62,
         dy: -30 - Math.random() * 76,
