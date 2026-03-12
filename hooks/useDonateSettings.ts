@@ -56,7 +56,10 @@ export function useDonateSettings(options: UseDonateSettingsOptions = {}): Donat
   );
 
   const upiQuery = useMemo(() => upiUrl.replace(/^upi:\/\/pay\?/, ""), [upiUrl]);
-  const upiIntentUrl = useMemo(() => `intent://pay?${upiQuery}#Intent;scheme=upi;end`, [upiQuery]);
+  const upiIntentUrl = useMemo(
+    () => `intent://pay?${upiQuery}#Intent;scheme=upi;S.browser_fallback_url=${encodeURIComponent(upiUrl)};end`,
+    [upiQuery, upiUrl]
+  );
   const gpayIntentUrl = useMemo(() => `tez://upi/pay?${upiQuery}`, [upiQuery]);
   const phonepeIntentUrl = useMemo(() => `phonepe://pay?${upiQuery}`, [upiQuery]);
   const paytmIntentUrl = useMemo(() => `paytmmp://pay?${upiQuery}`, [upiQuery]);

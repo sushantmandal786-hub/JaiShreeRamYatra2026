@@ -153,6 +153,8 @@ export function buildUpiLink({
   params.set("pn", payeeName);
   params.set("tn", note);
   params.set("cu", "INR");
+  // Unique transaction reference to satisfy UPI app validation and avoid silent rejects.
+  params.set("tr", `YATRA-${Date.now()}`);
   if (amount && amount > 0) {
     params.set("am", String(amount));
   }

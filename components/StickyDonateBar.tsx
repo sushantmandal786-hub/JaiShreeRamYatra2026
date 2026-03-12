@@ -22,12 +22,24 @@ export function StickyDonateBar() {
     const isAndroid = /android/i.test(window.navigator.userAgent);
 
     if (isAndroid) {
+      const before = Date.now();
       window.location.href = upiIntentUrl;
-      window.setTimeout(() => {
-        if (document.visibilityState === "visible") {
-          window.location.href = upiUrl;
-        }
-      }, 700);
+
+      const fallbackTimer = window.setTimeout(() => {
+        if (document.visibilityState === "hidden") return;
+        if (Date.now() - before > 3000) return;
+        window.location.href = upiUrl;
+      }, 2000);
+
+      document.addEventListener(
+        "visibilitychange",
+        () => {
+          if (document.visibilityState === "hidden") {
+            clearTimeout(fallbackTimer);
+          }
+        },
+        { once: true }
+      );
       return;
     }
 

@@ -32,16 +32,57 @@ export function DonationForms() {
     const isAndroid = /android/i.test(window.navigator.userAgent);
 
     if (isAndroid) {
+      const before = Date.now();
       window.location.href = upiIntentUrl;
-      window.setTimeout(() => {
-        if (document.visibilityState === "visible") {
-          window.location.href = upiUrl;
-        }
-      }, 700);
+
+      const fallbackTimer = window.setTimeout(() => {
+        if (document.visibilityState === "hidden") return;
+        if (Date.now() - before > 3000) return;
+        window.location.href = upiUrl;
+      }, 2000);
+
+      document.addEventListener(
+        "visibilitychange",
+        () => {
+          if (document.visibilityState === "hidden") {
+            clearTimeout(fallbackTimer);
+          }
+        },
+        { once: true }
+      );
       return;
     }
 
     window.location.href = upiUrl;
+  };
+
+  const handleAppIntent = (intentUrl: string) => (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    const isAndroid = /android/i.test(window.navigator.userAgent);
+
+    if (!isAndroid) {
+      window.location.href = upiUrl;
+      return;
+    }
+
+    const before = Date.now();
+    window.location.href = intentUrl;
+
+    const fallbackTimer = window.setTimeout(() => {
+      if (document.visibilityState === "hidden") return;
+      if (Date.now() - before > 3000) return;
+      window.location.href = upiIntentUrl;
+    }, 2000);
+
+    document.addEventListener(
+      "visibilitychange",
+      () => {
+        if (document.visibilityState === "hidden") {
+          clearTimeout(fallbackTimer);
+        }
+      },
+      { once: true }
+    );
   };
 
   const handleDonation = async (event: FormEvent<HTMLFormElement>) => {
@@ -135,22 +176,46 @@ export function DonationForms() {
               textKey="whatsapp_desk_label"
             />
           </a>
-          <a href={gpayIntentUrl} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 transition hover:-translate-y-0.5 hover:bg-maroon/5 hover:shadow-sm">
+          <a
+            href={gpayIntentUrl}
+            onClick={handleAppIntent(gpayIntentUrl)}
+            className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 transition hover:-translate-y-0.5 hover:bg-maroon/5 hover:shadow-sm"
+          >
             Open in GPay
           </a>
-          <a href={phonepeIntentUrl} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 transition hover:-translate-y-0.5 hover:bg-maroon/5 hover:shadow-sm">
+          <a
+            href={phonepeIntentUrl}
+            onClick={handleAppIntent(phonepeIntentUrl)}
+            className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 transition hover:-translate-y-0.5 hover:bg-maroon/5 hover:shadow-sm"
+          >
             Open in PhonePe
           </a>
-          <a href={paytmIntentUrl} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 transition hover:-translate-y-0.5 hover:bg-maroon/5 hover:shadow-sm">
+          <a
+            href={paytmIntentUrl}
+            onClick={handleAppIntent(paytmIntentUrl)}
+            className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 transition hover:-translate-y-0.5 hover:bg-maroon/5 hover:shadow-sm"
+          >
             Open in Paytm
           </a>
-          <a href={bhimIntentUrl} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 transition hover:-translate-y-0.5 hover:bg-maroon/5 hover:shadow-sm">
+          <a
+            href={bhimIntentUrl}
+            onClick={handleAppIntent(bhimIntentUrl)}
+            className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 transition hover:-translate-y-0.5 hover:bg-maroon/5 hover:shadow-sm"
+          >
             Open in BHIM
           </a>
-          <a href={credIntentUrl} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 transition hover:-translate-y-0.5 hover:bg-maroon/5 hover:shadow-sm">
+          <a
+            href={credIntentUrl}
+            onClick={handleAppIntent(credIntentUrl)}
+            className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 transition hover:-translate-y-0.5 hover:bg-maroon/5 hover:shadow-sm"
+          >
             Open in Cred
           </a>
-          <a href={amazonIntentUrl} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 transition hover:-translate-y-0.5 hover:bg-maroon/5 hover:shadow-sm">
+          <a
+            href={amazonIntentUrl}
+            onClick={handleAppIntent(amazonIntentUrl)}
+            className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 transition hover:-translate-y-0.5 hover:bg-maroon/5 hover:shadow-sm"
+          >
             Amazon Pay
           </a>
         </div>
