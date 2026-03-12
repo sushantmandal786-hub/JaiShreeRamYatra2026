@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow,noarchive" />
     <title>Shri Ram Navami Admin Panel</title>
     <style>
       :root {
@@ -18,32 +19,55 @@
         color: var(--cream);
       }
       .wrap {
-        width: min(960px, 94vw);
-        margin: 34px auto;
+        width: min(1120px, 95vw);
+        margin: 30px auto;
       }
-      .card {
+      .card,
+      .subcard {
         border: 1px solid rgba(255, 255, 255, 0.15);
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(12px);
         border-radius: 16px;
+      }
+      .card {
         padding: 20px;
         margin-bottom: 16px;
       }
+      .subcard {
+        padding: 14px;
+        margin: 12px 0;
+      }
+      .grid {
+        display: grid;
+        gap: 14px;
+      }
+      .grid.cols-2 {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      }
+      .grid.cols-3 {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+      .hidden {
+        display: none;
+      }
       label {
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 600;
       }
       input,
-      textarea {
+      textarea,
+      select {
         width: 100%;
         margin-top: 8px;
-        margin-bottom: 12px;
         padding: 10px 12px;
         border-radius: 10px;
         border: 1px solid rgba(255, 255, 255, 0.18);
         background: rgba(0, 0, 0, 0.25);
         color: var(--cream);
         font: inherit;
+      }
+      textarea {
+        min-height: 100px;
       }
       button {
         border: 0;
@@ -61,34 +85,40 @@
         color: var(--gold);
         border: 1px solid rgba(244, 195, 90, 0.5);
       }
-      .row {
-        display: grid;
-        gap: 10px;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      }
-      .hidden {
-        display: none;
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 14px;
       }
       .note {
         font-size: 12px;
-        opacity: 0.85;
+        opacity: 0.84;
       }
       #status {
-        margin-top: 8px;
+        margin-top: 10px;
         font-size: 13px;
       }
       code {
         color: var(--gold);
       }
       pre {
+        margin: 8px 0 0;
         white-space: pre-wrap;
         word-break: break-word;
-        margin: 8px 0 0;
-        padding: 10px;
-        border-radius: 10px;
-        background: rgba(0, 0, 0, 0.22);
-        border: 1px solid rgba(255, 255, 255, 0.09);
         font-size: 12px;
+      }
+      .uploader {
+        display: grid;
+        gap: 10px;
+      }
+      .preview {
+        width: 124px;
+        height: 124px;
+        border-radius: 999px;
+        border: 1px solid rgba(244, 195, 90, 0.45);
+        object-fit: cover;
+        background: rgba(0, 0, 0, 0.2);
       }
     </style>
   </head>
@@ -99,68 +129,189 @@
         <p class="note">Protected with SHA-256 verification and localStorage overrides.</p>
         <label>Password</label>
         <input id="password" type="password" placeholder="Enter admin password" />
-        <button class="primary" id="login">Unlock Panel</button>
+        <div class="actions">
+          <button class="primary" id="login">Unlock Panel</button>
+        </div>
         <div id="auth-status" class="note"></div>
       </section>
 
       <section class="card hidden" id="panel-card">
-        <h2>Site Overrides</h2>
-        <p class="note">Stored under <code>shri_ram_overrides</code> in localStorage.</p>
+        <h2>Website Controls</h2>
+        <p class="note">Saved in <code>localStorage -> shri_ram_overrides</code></p>
 
-        <label>Google Apps Script URL</label>
-        <input id="apps-script" type="url" placeholder="https://script.google.com/macros/s/.../exec" />
-
-        <div class="row">
-          <div>
-            <label>UPI Number (primary)</label>
-            <input id="upi-number" type="text" inputmode="numeric" placeholder="7909041154" />
-          </div>
-          <div>
-            <label>UPI ID (optional)</label>
-            <input id="upi-id" type="text" placeholder="7909041154@upi" />
-          </div>
-        </div>
-
-        <label>Donate Button Label (all Donate buttons)</label>
-        <input id="donate-label" type="text" placeholder="Donate Now" />
-
-        <div class="row">
-          <div>
-            <label>Donation Counter</label>
-            <input id="donation-counter" type="number" min="0" />
-          </div>
-          <div>
-            <label>Devotee Counter</label>
-            <input id="devotee-counter" type="number" min="0" />
-          </div>
-          <div>
-            <label>Volunteer Counter</label>
-            <input id="volunteer-counter" type="number" min="0" />
+        <div class="subcard">
+          <h3>Integrations</h3>
+          <div class="grid cols-2">
+            <div>
+              <label>Google Apps Script URL (form submit)</label>
+              <input id="apps-script" type="url" placeholder="https://script.google.com/macros/s/.../exec" />
+            </div>
+            <div>
+              <label>Donation Feed URL (Google Sheet/API JSON)</label>
+              <input id="donation-feed-url" type="url" placeholder="https://.../exec?mode=donation_feed" />
+            </div>
           </div>
         </div>
 
-        <label>Text Overrides JSON</label>
+        <div class="subcard">
+          <h3>Hero & Donation</h3>
+          <div class="grid cols-2">
+            <div>
+              <label>Hero Background Image Path</label>
+              <input id="hero-bg-image" type="text" placeholder="/assets/hanuman-meditating.jpeg" />
+            </div>
+            <div>
+              <label>Hero Background Opacity (0.10 to 0.95)</label>
+              <input id="hero-opacity" type="number" min="0.1" max="0.95" step="0.01" placeholder="0.56" />
+            </div>
+            <div>
+              <label>Header Logo Path (Ayodhya Ram logo)</label>
+              <input id="logo-path" type="text" placeholder="/assets/shree_ram.jpg" />
+            </div>
+            <div>
+              <label>Donate Button Label</label>
+              <input id="donate-label" type="text" placeholder="Donate Now" />
+            </div>
+            <div>
+              <label>UPI Number</label>
+              <input id="upi-number" type="text" inputmode="numeric" placeholder="7909041154" />
+            </div>
+            <div>
+              <label>UPI ID (recommended, e.g. 7909041154@ybl)</label>
+              <input id="upi-id" type="text" placeholder="7909041154@ybl" />
+            </div>
+          </div>
+        </div>
+
+        <div class="subcard">
+          <h3>Primary Organizer Profile</h3>
+          <div class="grid cols-2">
+            <div>
+              <label>Profile Image Path / URL</label>
+              <input id="organizer-image" type="text" placeholder="/assets/nagesh.jpg" />
+              <div class="uploader">
+                <label>Upload + Circle Crop + Compress</label>
+                <input id="organizer-image-upload" type="file" accept="image/*" />
+                <label>Zoom for Crop (center)</label>
+                <input id="organizer-image-zoom" type="range" min="1" max="2.4" step="0.05" value="1.2" />
+                <img id="organizer-preview" class="preview" alt="Organizer preview" />
+              </div>
+            </div>
+            <div>
+              <label>Name</label>
+              <input id="organizer-name" type="text" placeholder="Nagesh Samrta" />
+            </div>
+            <div>
+              <label>Designation</label>
+              <input id="organizer-designation" type="text" placeholder="मुख्य संयोजक" />
+            </div>
+            <div>
+              <label>Mobile</label>
+              <input id="organizer-phone" type="text" placeholder="8651352594" />
+            </div>
+            <div>
+              <label>WhatsApp Number</label>
+              <input id="organizer-whatsapp" type="text" placeholder="8651352594" />
+            </div>
+            <div>
+              <label>Facebook Link</label>
+              <input id="organizer-facebook" type="url" placeholder="https://facebook.com/..." />
+            </div>
+          </div>
+        </div>
+
+        <div class="subcard">
+          <h3>Live Counters</h3>
+          <div class="grid cols-3">
+            <div>
+              <label>Donation Counter</label>
+              <input id="donation-counter" type="number" min="0" />
+            </div>
+            <div>
+              <label>Devotee Counter</label>
+              <input id="devotee-counter" type="number" min="0" />
+            </div>
+            <div>
+              <label>Volunteer Counter</label>
+              <input id="volunteer-counter" type="number" min="0" />
+            </div>
+          </div>
+        </div>
+
+        <div class="subcard">
+          <h3>Newsletter Posts (separate section)</h3>
+          <label>JSON Array (title, content, date, image)</label>
+          <textarea
+            id="newsletter-posts"
+            rows="7"
+            placeholder='[{"title":"Volunteer Briefing Complete","content":"Today we finalized route marshals...","date":"2026-03-12","image":"/assets/moment1.jpg"}]'
+          ></textarea>
+          <p class="note">Add multiple posts here. Latest post should be first in the list.</p>
+        </div>
+
+        <div class="subcard">
+          <h3>Yatra Timeline (time + place + optional note)</h3>
+          <label>JSON Array (time, place, note)</label>
+          <textarea
+            id="yatra-timeline"
+            rows="6"
+            placeholder='[{"time":"01:00 PM","place":"Rupaspur Main Gate","note":"Flag-off and Sankalp"}]'
+          ></textarea>
+          <p class="note">This powers the rectangle timeline block on homepage.</p>
+        </div>
+
+        <div class="subcard">
+          <h3>Quick Text Editor (English)</h3>
+          <div class="grid cols-2">
+            <div>
+              <label>Hero Title</label>
+              <input id="qt-hero-title" type="text" />
+            </div>
+            <div>
+              <label>Hero Subtitle</label>
+              <input id="qt-hero-subtitle" type="text" />
+            </div>
+            <div>
+              <label>About Heading</label>
+              <input id="qt-about-heading" type="text" />
+            </div>
+            <div>
+              <label>Impact Heading</label>
+              <input id="qt-impact-heading" type="text" />
+            </div>
+            <div>
+              <label>Transparency Heading</label>
+              <input id="qt-transparency-heading" type="text" />
+            </div>
+            <div>
+              <label>Donate Heading</label>
+              <input id="qt-donate-heading" type="text" />
+            </div>
+          </div>
+        </div>
+
+        <label>Text Overrides JSON (full multilingual control: en/hi/hing/sanskrit text as you wish)</label>
         <textarea
           id="text-overrides"
-          rows="10"
-          placeholder='{"hero_title":{"en":"Join the Grand Shri Ram Navami Shobha Yatra 2026","hi":"...","hing":"..."}}'
+          rows="8"
+          placeholder='{"hero_title":{"en":"...","hi":"...","hing":"..."}}'
         ></textarea>
-        <p class="note">Format: key -> { en, hi, hing }. Leave empty to keep default text.</p>
+        <p class="note">You can put Sanskrit text in any language field (en/hi/hing) as per your design.</p>
 
         <details class="note">
-          <summary>Common editable text keys</summary>
+          <summary>Common text keys</summary>
           <pre>hero_title, hero_subtitle, about_heading, impact_heading, transparency_heading,
 donate_heading, donate_button_primary, donation_desk_call, testimonial_heading, feature_heading,
 gallery_heading, community_heading, final_cta_heading, final_cta_subtitle, donation_form_heading,
 donation_form_subheading, donation_form_submit, volunteer_form_heading, volunteer_form_subheading,
-volunteer_form_submit, whatsapp_desk_label, nav_about, nav_impact, nav_gallery, nav_donate,
-admin_login_label</pre>
+volunteer_form_submit, whatsapp_desk_label, nav_about, nav_impact, nav_gallery, nav_timeline,
+nav_newsletter, nav_donate</pre>
         </details>
 
-        <label>Raw JSON (optional advanced override)</label>
+        <label>Raw JSON (advanced)</label>
         <textarea id="raw-json" rows="6" placeholder='{"customKey":"customValue"}'></textarea>
 
-        <div class="row">
+        <div class="actions">
           <button class="primary" id="save">Save Overrides</button>
           <button class="ghost" id="load">Load Current</button>
           <button class="ghost" id="clear">Clear Overrides</button>
@@ -172,20 +323,51 @@ admin_login_label</pre>
     <script>
       const STORAGE_KEY = "shri_ram_overrides";
       const PASSWORD_HASH = "e50b3490a450b33cd01011e276322ffec7a82b7dd88b8916cdcbb9e21c66db08";
+      const AUTH_KEY = "shri_ram_admin_auth_v1";
+      const LOCK_KEY = "shri_ram_admin_lock_v1";
+      const MAX_ATTEMPTS = 5;
+      const LOCK_MINUTES = 15;
+      const SESSION_TIMEOUT_MS = 15 * 60 * 1000;
 
       const authCard = document.getElementById("auth-card");
       const panelCard = document.getElementById("panel-card");
       const authStatus = document.getElementById("auth-status");
       const status = document.getElementById("status");
+      let organizerUploadImage = null;
+      let activityTimer = 0;
+
+      const quickTextMap = [
+        { key: "hero_title", field: "qt-hero-title" },
+        { key: "hero_subtitle", field: "qt-hero-subtitle" },
+        { key: "about_heading", field: "qt-about-heading" },
+        { key: "impact_heading", field: "qt-impact-heading" },
+        { key: "transparency_heading", field: "qt-transparency-heading" },
+        { key: "donate_heading", field: "qt-donate-heading" }
+      ];
 
       const fields = {
         appsScriptUrl: document.getElementById("apps-script"),
+        donationFeedUrl: document.getElementById("donation-feed-url"),
+        heroBgImage: document.getElementById("hero-bg-image"),
+        heroOpacity: document.getElementById("hero-opacity"),
+        logoPath: document.getElementById("logo-path"),
         upiNumber: document.getElementById("upi-number"),
         upiId: document.getElementById("upi-id"),
         donateLabel: document.getElementById("donate-label"),
+        organizerImage: document.getElementById("organizer-image"),
+        organizerImageUpload: document.getElementById("organizer-image-upload"),
+        organizerImageZoom: document.getElementById("organizer-image-zoom"),
+        organizerPreview: document.getElementById("organizer-preview"),
+        organizerName: document.getElementById("organizer-name"),
+        organizerDesignation: document.getElementById("organizer-designation"),
+        organizerPhone: document.getElementById("organizer-phone"),
+        organizerWhatsapp: document.getElementById("organizer-whatsapp"),
+        organizerFacebook: document.getElementById("organizer-facebook"),
         donationAmount: document.getElementById("donation-counter"),
         devoteeCount: document.getElementById("devotee-counter"),
         volunteerCount: document.getElementById("volunteer-counter"),
+        newsletterPosts: document.getElementById("newsletter-posts"),
+        yatraTimeline: document.getElementById("yatra-timeline"),
         textOverrides: document.getElementById("text-overrides"),
         rawJson: document.getElementById("raw-json")
       };
@@ -213,42 +395,238 @@ admin_login_label</pre>
         return String(value || "").replace(/\D/g, "");
       }
 
+      function getLockState() {
+        try {
+          return JSON.parse(localStorage.getItem(LOCK_KEY) || "{}");
+        } catch {
+          return {};
+        }
+      }
+
+      function writeLockState(data) {
+        localStorage.setItem(LOCK_KEY, JSON.stringify(data));
+      }
+
+      function getActiveLock() {
+        const state = getLockState();
+        if (!state || !state.until) {
+          return null;
+        }
+        const until = Number(state.until);
+        if (!Number.isFinite(until) || Date.now() >= until) {
+          localStorage.removeItem(LOCK_KEY);
+          return null;
+        }
+        return state;
+      }
+
+      function registerFailedAttempt() {
+        const current = getLockState();
+        const attempts = Number(current.attempts || 0) + 1;
+        const next = { attempts };
+        if (attempts >= MAX_ATTEMPTS) {
+          next.until = Date.now() + LOCK_MINUTES * 60 * 1000;
+        }
+        writeLockState(next);
+        return next;
+      }
+
+      function clearLockState() {
+        localStorage.removeItem(LOCK_KEY);
+      }
+
+      function showRemainingLockMessage(lock) {
+        const mins = Math.max(1, Math.ceil((Number(lock.until) - Date.now()) / 60000));
+        authStatus.textContent = `Too many attempts. Try again in ${mins} minute(s).`;
+        authStatus.style.color = "#ff9a8d";
+      }
+
+      function lockPanel(message = "Session locked due to inactivity. Please login again.") {
+        panelCard.classList.add("hidden");
+        authCard.classList.remove("hidden");
+        authStatus.textContent = message;
+        authStatus.style.color = "#ffcf87";
+        localStorage.removeItem(AUTH_KEY);
+        unbindActivityListeners();
+        window.clearTimeout(activityTimer);
+      }
+
+      function resetActivityTimeout() {
+        window.clearTimeout(activityTimer);
+        activityTimer = window.setTimeout(() => {
+          lockPanel();
+        }, SESSION_TIMEOUT_MS);
+      }
+
+      function markActivity() {
+        if (panelCard.classList.contains("hidden")) {
+          return;
+        }
+        localStorage.setItem(AUTH_KEY, String(Date.now()));
+        resetActivityTimeout();
+      }
+
+      function bindActivityListeners() {
+        ["click", "keydown", "mousemove", "touchstart"].forEach((eventName) => {
+          document.addEventListener(eventName, markActivity, { passive: true });
+        });
+      }
+
+      function unbindActivityListeners() {
+        ["click", "keydown", "mousemove", "touchstart"].forEach((eventName) => {
+          document.removeEventListener(eventName, markActivity);
+        });
+      }
+
+      function loadOrganizerPreview(path) {
+        fields.organizerPreview.src = path || "/assets/nagesh.jpg";
+      }
+
+      function renderOrganizerUpload() {
+        if (!organizerUploadImage) {
+          return;
+        }
+        const zoom = Number(fields.organizerImageZoom.value || 1.2);
+        const canvas = document.createElement("canvas");
+        canvas.width = 420;
+        canvas.height = 420;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          return;
+        }
+
+        const sourceW = organizerUploadImage.naturalWidth || organizerUploadImage.width;
+        const sourceH = organizerUploadImage.naturalHeight || organizerUploadImage.height;
+        const side = Math.min(sourceW, sourceH) / zoom;
+        const sx = (sourceW - side) / 2;
+        const sy = (sourceH - side) / 2;
+
+        ctx.drawImage(organizerUploadImage, sx, sy, side, side, 0, 0, 420, 420);
+        const compressed = canvas.toDataURL("image/jpeg", 0.84);
+        fields.organizerImage.value = compressed;
+        loadOrganizerPreview(compressed);
+      }
+
+      function initOrganizerImageUploader() {
+        fields.organizerImageUpload.addEventListener("change", (event) => {
+          const file = event.target.files && event.target.files[0];
+          if (!file) {
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = () => {
+            const image = new Image();
+            image.onload = () => {
+              organizerUploadImage = image;
+              renderOrganizerUpload();
+            };
+            image.src = String(reader.result || "");
+          };
+          reader.readAsDataURL(file);
+        });
+
+        fields.organizerImageZoom.addEventListener("input", () => {
+          renderOrganizerUpload();
+        });
+
+        fields.organizerImage.addEventListener("input", () => {
+          if (!organizerUploadImage) {
+            loadOrganizerPreview(fields.organizerImage.value.trim());
+          }
+        });
+      }
+
+      function setQuickTextFields(data) {
+        const textOverrides = data.textOverrides || {};
+        quickTextMap.forEach((item) => {
+          const node = document.getElementById(item.field);
+          node.value = textOverrides[item.key]?.en || "";
+        });
+      }
+
+      function readQuickTextFields(base) {
+        const textOverrides = { ...(base || {}) };
+        quickTextMap.forEach((item) => {
+          const node = document.getElementById(item.field);
+          const value = node.value.trim();
+          if (value) {
+            textOverrides[item.key] = { ...(textOverrides[item.key] || {}), en: value };
+          }
+        });
+        return textOverrides;
+      }
+
       function loadToFields() {
         const data = readOverrides();
         fields.appsScriptUrl.value = data.appsScriptUrl || "";
+        fields.donationFeedUrl.value = data.donationFeedUrl || "";
+        fields.heroBgImage.value = data.hero?.backgroundImage || "";
+        fields.heroOpacity.value = data.hero?.opacity ?? "";
+        fields.logoPath.value = data.logoPath || "";
         fields.upiNumber.value = data.upiNumber || "";
         fields.upiId.value = data.upiId || "";
         fields.donateLabel.value = data.buttons?.donateNow || "";
+        fields.organizerImage.value = data.organizer?.image || "";
+        fields.organizerName.value = data.organizer?.name || "";
+        fields.organizerDesignation.value = data.organizer?.designation || "";
+        fields.organizerPhone.value = data.organizer?.phone || "";
+        fields.organizerWhatsapp.value = data.organizer?.whatsapp || "";
+        fields.organizerFacebook.value = data.organizer?.facebook || "";
         fields.donationAmount.value = data.counters?.donationAmount ?? "";
         fields.devoteeCount.value = data.counters?.devoteeCount ?? "";
         fields.volunteerCount.value = data.counters?.volunteerCount ?? "";
+        fields.newsletterPosts.value = data.newsletterPosts ? JSON.stringify(data.newsletterPosts, null, 2) : "";
+        fields.yatraTimeline.value = data.yatraTimeline ? JSON.stringify(data.yatraTimeline, null, 2) : "";
         fields.textOverrides.value = data.textOverrides ? JSON.stringify(data.textOverrides, null, 2) : "";
         fields.rawJson.value = "";
+        setQuickTextFields(data);
+        loadOrganizerPreview(fields.organizerImage.value || "/assets/nagesh.jpg");
       }
 
       function saveOverrides() {
         try {
           const textRaw = fields.textOverrides.value.trim();
-          const textOverrides = textRaw ? JSON.parse(textRaw) : undefined;
+          const newsletterRaw = fields.newsletterPosts.value.trim();
+          const timelineRaw = fields.yatraTimeline.value.trim();
+          const baseTextOverrides = textRaw ? JSON.parse(textRaw) : {};
+          const newsletterPosts = newsletterRaw ? JSON.parse(newsletterRaw) : undefined;
+          const yatraTimeline = timelineRaw ? JSON.parse(timelineRaw) : undefined;
+          const textOverrides = readQuickTextFields(baseTextOverrides);
 
           const payload = {
             appsScriptUrl: fields.appsScriptUrl.value.trim() || undefined,
+            donationFeedUrl: fields.donationFeedUrl.value.trim() || undefined,
+            logoPath: fields.logoPath.value.trim() || undefined,
+            hero: {
+              backgroundImage: fields.heroBgImage.value.trim() || undefined,
+              opacity: Number(fields.heroOpacity.value || 0) || undefined
+            },
             upiNumber: cleanDigits(fields.upiNumber.value) || undefined,
             upiId: fields.upiId.value.trim() || undefined,
             buttons: {
               donateNow: fields.donateLabel.value.trim() || undefined
+            },
+            organizer: {
+              image: fields.organizerImage.value.trim() || undefined,
+              name: fields.organizerName.value.trim() || undefined,
+              designation: fields.organizerDesignation.value.trim() || undefined,
+              phone: cleanDigits(fields.organizerPhone.value) || undefined,
+              whatsapp: cleanDigits(fields.organizerWhatsapp.value) || undefined,
+              facebook: fields.organizerFacebook.value.trim() || undefined
             },
             counters: {
               donationAmount: Number(fields.donationAmount.value || 0),
               devoteeCount: Number(fields.devoteeCount.value || 0),
               volunteerCount: Number(fields.volunteerCount.value || 0)
             },
-            textOverrides
+            newsletterPosts: Array.isArray(newsletterPosts) ? newsletterPosts : undefined,
+            yatraTimeline: Array.isArray(yatraTimeline) ? yatraTimeline : undefined,
+            textOverrides: Object.keys(textOverrides).length ? textOverrides : undefined
           };
 
-          if (!payload.buttons.donateNow) {
-            delete payload.buttons;
-          }
+          if (!payload.hero.backgroundImage && !payload.hero.opacity) delete payload.hero;
+          if (!payload.buttons.donateNow) delete payload.buttons;
+          if (!Object.values(payload.organizer).some(Boolean)) delete payload.organizer;
 
           const raw = fields.rawJson.value.trim();
           const extra = raw ? JSON.parse(raw) : {};
@@ -258,21 +636,36 @@ admin_login_label</pre>
           window.dispatchEvent(new Event("shri-ram-overrides-change"));
           setStatus("Overrides saved successfully.");
         } catch (error) {
-          setStatus("Invalid JSON detected in Text Overrides or Raw JSON.", false);
+          setStatus("Invalid JSON in Text Overrides or Raw JSON.", false);
         }
       }
 
       document.getElementById("login").addEventListener("click", async () => {
+        const activeLock = getActiveLock();
+        if (activeLock) {
+          showRemainingLockMessage(activeLock);
+          return;
+        }
+
         const value = document.getElementById("password").value;
         const digest = await sha256(value);
         if (digest === PASSWORD_HASH) {
+          clearLockState();
           authCard.classList.add("hidden");
           panelCard.classList.remove("hidden");
           loadToFields();
+          localStorage.setItem(AUTH_KEY, String(Date.now()));
+          bindActivityListeners();
+          resetActivityTimeout();
           setStatus("Panel unlocked.");
         } else {
-          authStatus.textContent = "Incorrect password.";
-          authStatus.style.color = "#ff9a8d";
+          const nextLock = registerFailedAttempt();
+          if (nextLock.until) {
+            showRemainingLockMessage(nextLock);
+          } else {
+            authStatus.textContent = `Incorrect password. Attempts left: ${MAX_ATTEMPTS - nextLock.attempts}`;
+            authStatus.style.color = "#ff9a8d";
+          }
         }
       });
 
@@ -293,6 +686,14 @@ admin_login_label</pre>
         window.dispatchEvent(new Event("shri-ram-overrides-change"));
         setStatus("Overrides cleared.");
       });
+
+      (function init() {
+        initOrganizerImageUploader();
+        const lock = getActiveLock();
+        if (lock) {
+          showRemainingLockMessage(lock);
+        }
+      })();
     </script>
   </body>
 </html>

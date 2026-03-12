@@ -63,21 +63,24 @@ export function FaqAccordion() {
       {FAQS.map((item, idx) => {
         const isOpen = open === idx;
         return (
-          <article key={item.q.en} className="glass rounded-2xl border border-white/10 p-4 sm:p-5">
+          <article
+            key={item.q.en}
+            className="rounded-2xl border border-maroon/20 bg-white p-4 shadow-[0_12px_24px_rgba(111,28,20,0.08)] sm:p-5"
+          >
             <button
               type="button"
               className="flex w-full items-center justify-between gap-4 text-left"
               onClick={() => setOpen((current) => (current === idx ? null : idx))}
             >
-              <h3 className="text-base font-medium text-cream sm:text-lg">
+              <h3 className="text-base font-medium text-maroon sm:text-lg">
                 <LangText en={item.q.en} hi={item.q.hi} hing={item.q.hing} />
               </h3>
-              <span className="text-xl text-gold">{isOpen ? "−" : "+"}</span>
+              <span className="text-xl text-deep-saffron">{isOpen ? "−" : "+"}</span>
             </button>
 
             <div className={`faq-content ${isOpen ? "open" : ""}`}>
               <div>
-                <p className="pt-3 text-sm text-cream/75 sm:text-base">
+                <p className="pt-3 text-sm text-maroon/80 sm:text-base">
                   <LangText en={item.a.en} hi={item.a.hi} hing={item.a.hing} />
                 </p>
               </div>

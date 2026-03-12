@@ -4,14 +4,26 @@ import { useEffect } from "react";
 import gsap from "gsap";
 
 function animateIn(element: HTMLElement, delay = 0) {
+  const isPop = Boolean(element.dataset.pop);
   gsap.to(element, {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
     scale: 1,
-    duration: 0.9,
-    ease: "power3.out",
+    duration: isPop ? 1.24 : 1.4,
+    ease: "power2.out",
     delay
+  });
+}
+
+function animateOut(element: HTMLElement) {
+  const isPop = Boolean(element.dataset.pop);
+  gsap.to(element, {
+    opacity: 0,
+    y: isPop ? 24 : 46,
+    scale: isPop ? 0.96 : 0.985,
+    duration: 0.62,
+    ease: "power2.inOut",
+    overwrite: "auto"
   });
 }
 
@@ -24,31 +36,29 @@ export function useScrollAnimations() {
     all.forEach((element) => {
       gsap.set(element, {
         opacity: 0,
-        y: element.dataset.pop ? 20 : 48,
-        filter: "blur(8px)",
-        scale: element.dataset.pop ? 0.97 : 1
+        y: element.dataset.pop ? 24 : 46,
+        scale: element.dataset.pop ? 0.96 : 0.985,
+        force3D: true
       });
     });
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (!entry.isIntersecting) {
-            return;
-          }
-
           const element = entry.target as HTMLElement;
-          const sequence = Number(element.dataset.sequence ?? 0);
-          const delay = sequence * 0.08;
-
-          animateIn(element, delay);
-          observer.unobserve(element);
+          if (entry.isIntersecting) {
+            const sequence = Number(element.dataset.sequence ?? 0);
+            const delay = sequence * 0.08;
+            animateIn(element, delay);
+          } else {
+            animateOut(element);
+          }
         });
       },
       {
         root: null,
         threshold: 0.2,
-        rootMargin: "0px 0px -8% 0px"
+        rootMargin: "0px 0px -5% 0px"
       }
     );
 
@@ -60,9 +70,9 @@ export function useScrollAnimations() {
       heroElements.forEach((el, index) => {
         tl.fromTo(
           el,
-          { y: 24, opacity: 0, filter: "blur(6px)" },
-          { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.9 },
-          index === 0 ? 0 : "<0.12"
+          { y: 26, opacity: 0 },
+          { y: 0, opacity: 1, duration: 1.22 },
+          index === 0 ? 0 : "<0.14"
         );
       });
     }

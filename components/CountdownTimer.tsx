@@ -45,7 +45,12 @@ export function CountdownTimer() {
     <div className="glass grid grid-cols-4 gap-2 rounded-2xl p-3 sm:p-4">
       {blocks.map(([label, value]) => (
         <div key={label} className="rounded-xl bg-white/5 px-2 py-3 text-center">
-          <div className="text-lg font-semibold text-gold sm:text-2xl">{String(value).padStart(2, "0")}</div>
+          <div
+            className="text-lg font-extrabold text-gold sm:text-2xl"
+            style={{ textShadow: "0 0 10px rgba(244,195,90,0.45), 0 0 16px rgba(240,122,38,0.28)" }}
+          >
+            {String(value).padStart(2, "0")}
+          </div>
           <div className="text-[10px] uppercase tracking-[0.16em] text-cream/70 sm:text-xs">{label}</div>
         </div>
       ))}

@@ -23,8 +23,13 @@ export function FundUsagePie() {
 
       <ul className="space-y-2">
         {items.map((item, idx) => (
-          <li key={item.label} data-pop="true" data-sequence={idx + 1} className="glass rounded-xl p-3 text-sm sm:text-base">
-            <span className="font-semibold text-gold">{item.percent}%</span> {item.label}
+          <li
+            key={item.label}
+            data-pop="true"
+            data-sequence={idx + 1}
+            className="rounded-xl border border-maroon/18 bg-white px-3 py-3 text-sm text-maroon shadow-[0_10px_20px_rgba(111,28,20,0.06)] sm:text-base"
+          >
+            <span className="font-extrabold text-deep-saffron">{item.percent}%</span> {item.label}
           </li>
         ))}
       </ul>

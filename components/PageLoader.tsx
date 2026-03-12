@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 type PageLoaderProps = {
@@ -44,20 +45,20 @@ export function PageLoader({ durationMs = 3000 }: PageLoaderProps) {
       aria-label="Loading Shri Ram Navami website"
     >
       <div className="preloader-content">
-        <svg className="preloader-svg" viewBox="0 0 760 180" aria-hidden="true">
-          <text x="50%" y="56%" textAnchor="middle" className="preloader-script-text">
-            Jai Shree Ram
-          </text>
-        </svg>
-        <p className="preloader-devanagari">॥ जय श्री राम ॥</p>
-        <video
-          className="preloader-flag-video"
-          src="/assets/saffron-flag.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
+        <Image
+          className="preloader-temple-art"
+          src="/assets/ram-mandir-glow.png"
+          alt="Ram Mandir art"
+          width={2048}
+          height={2048}
+          priority
         />
+        <div className="preloader-title-wrap">
+          <div className="loader-typewriter" aria-hidden="true">
+            <span className="loader-main-text">जय श्री राम</span>
+          </div>
+          <p className="preloader-devanagari">हिन्दू पुत्र संगठन</p>
+        </div>
       </div>
     </div>
   );

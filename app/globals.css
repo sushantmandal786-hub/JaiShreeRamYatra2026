@@ -6,6 +6,9 @@
   --font-inter: "Inter";
   --font-hind: "Hind";
   --font-caveat: "Caveat";
+  --font-kalam: "Kalam";
+  --font-noto-serif-devanagari: "Noto Serif Devanagari";
+  --font-yatra-one: "Yatra One";
   --color-saffron: #f07a26;
   --color-deep-saffron: #c45113;
   --color-gold: #f4c35a;
@@ -101,62 +104,287 @@ a {
 }
 
 .preloader-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: min(96vw, 1200px);
+  min-height: min(68vh, 620px);
   text-align: center;
-  padding: 16px;
+  padding: 20px 16px;
+  gap: 0;
 }
 
-.preloader-svg {
-  width: min(86vw, 680px);
-  height: auto;
+.preloader-title-wrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  place-items: center;
+  align-items: center;
+  margin-top: -2px;
+  gap: 0;
+  width: min(94vw, 820px);
 }
 
-.preloader-script-text {
-  font-family: var(--font-caveat), cursive;
-  font-size: 88px;
-  letter-spacing: 1.5px;
-  fill: transparent;
-  stroke: #f4c35a;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 1600;
-  stroke-dashoffset: 1600;
-  animation:
-    jai-write 2.6s cubic-bezier(0.52, 0.08, 0.17, 0.99) forwards,
-    jai-fill 0.9s ease forwards 2.35s;
-  filter: drop-shadow(0 0 8px rgba(240, 122, 38, 0.35));
+.loader-typewriter {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  overflow: hidden;
+  clip-path: inset(0 100% 0 0);
+  animation: loader-type 2.45s steps(14, end) forwards;
+}
+
+.loader-typewriter::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 8%;
+  height: 84%;
+  width: 3px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 238, 196, 0.95), rgba(255, 159, 42, 0.92));
+  box-shadow: 0 0 10px rgba(255, 165, 46, 0.75);
+  animation: loader-caret 0.65s steps(1, end) infinite;
+}
+
+.loader-main-text {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  white-space: nowrap;
+  font-family: var(--font-yatra-one), var(--font-noto-serif-devanagari), var(--font-hind), sans-serif;
+  font-size: clamp(58px, 9.2vw, 102px);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: #ffd067;
+  -webkit-text-stroke: 1px rgba(255, 236, 198, 0.88);
+  text-shadow:
+    0 0 7px rgba(244, 195, 90, 0.72),
+    0 0 14px rgba(240, 122, 38, 0.62),
+    0 0 22px rgba(196, 81, 19, 0.45);
+  animation: loader-fire 0.35s linear infinite;
 }
 
 .preloader-devanagari {
-  margin: 4px 0 0;
-  font-size: clamp(16px, 2.4vw, 24px);
-  letter-spacing: 0.2em;
-  color: rgba(255, 253, 247, 0.78);
+  z-index: 2;
+  margin: -8px 0 0;
+  font-size: clamp(15px, 2.2vw, 22px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(255, 239, 210, 0.92);
+  text-shadow: 0 0 10px rgba(240, 122, 38, 0.35);
 }
 
-.preloader-flag-video {
-  display: block;
-  width: min(72vw, 320px);
-  max-height: 180px;
-  margin: 10px auto 0;
-  border-radius: 14px;
-  border: 1px solid rgba(244, 195, 90, 0.34);
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.36);
-  object-fit: cover;
+.preloader-temple-art {
+  position: relative !important;
+  width: min(116vw, 1240px);
+  max-height: min(70vh, 700px);
+  height: auto;
+  z-index: 1;
+  object-fit: contain;
+  opacity: 0.72;
+  mix-blend-mode: screen;
+  filter: saturate(1.2) brightness(1.08) contrast(1.18) drop-shadow(0 22px 34px rgba(240, 122, 38, 0.3));
+  -webkit-mask-image: radial-gradient(circle at center, #000 78%, transparent 100%);
+  mask-image: radial-gradient(circle at center, #000 78%, transparent 100%);
 }
 
-@keyframes jai-write {
-  to {
-    stroke-dashoffset: 0;
-  }
+.hero-mouth-origin {
+  position: absolute;
+  left: clamp(48%, 51.2vw, 55%);
+  top: clamp(39%, 43vh, 47%);
+  width: 1px;
+  height: 1px;
+  perspective: 700px;
+  z-index: 2;
 }
 
-@keyframes jai-fill {
+.hero-mouth-mantra {
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: clamp(14px, 1.35vw, 19px);
+  font-family: "Hind", "Noto Sans Devanagari", sans-serif;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  text-shadow: 0 0 14px rgba(255, 255, 255, 0.32);
+  opacity: 0;
+  transform-origin: left center;
+  animation: ram-forward var(--dur, 2500ms) cubic-bezier(0.15, 0.58, 0.14, 0.95) forwards;
+}
+
+@keyframes loader-type {
   from {
-    fill: transparent;
+    clip-path: inset(0 100% 0 0);
   }
   to {
-    fill: rgba(255, 253, 247, 0.95);
-    stroke: rgba(255, 253, 247, 0.94);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes loader-caret {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  46%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes loader-fire {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.18);
+  }
+}
+
+@keyframes ram-forward {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, -120px) scale(0.62) rotateZ(0deg);
+  }
+  100% {
+    opacity: 0.08;
+    transform: translate3d(var(--dx, 102px), var(--dy, -70px), 88px) scale(1.14) rotateZ(var(--rot, 0deg));
+  }
+}
+
+@media (max-width: 768px) {
+  .loader-main-text {
+    -webkit-text-stroke: 0.8px rgba(255, 236, 198, 0.9);
+  }
+
+  .preloader-devanagari {
+    margin-top: -6px;
+  }
+
+  .hero-mouth-origin {
+    left: 51%;
+    top: 44%;
+  }
+
+  .hero-mouth-mantra {
+    font-size: 12px;
+  }
+}
+
+.after-hero-canvas {
+  position: relative;
+  isolation: isolate;
+}
+
+.after-hero-canvas::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(180deg, rgba(15, 10, 8, 0.16), rgba(15, 10, 8, 0.26)),
+    url("/assets/moment3.jpg");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  opacity: 0.32;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.after-hero-canvas > * {
+  position: relative;
+  z-index: 1;
+}
+
+[data-reveal],
+[data-pop],
+[data-hero-reveal] {
+  will-change: transform, opacity;
+}
+
+.sanskrit-fire-bar {
+  border-top: 1px solid rgba(244, 195, 90, 0.28);
+  border-bottom: 1px solid rgba(244, 195, 90, 0.28);
+  background:
+    radial-gradient(circle at 20% 10%, rgba(240, 122, 38, 0.26), transparent 46%),
+    radial-gradient(circle at 80% 90%, rgba(196, 81, 19, 0.24), transparent 44%),
+    linear-gradient(90deg, #2a120d 0%, #3f1b0f 50%, #2a120d 100%);
+  overflow: hidden;
+}
+
+.sanskrit-fire-write-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 9px 0;
+  overflow: hidden;
+  transition: opacity 0.6s ease;
+}
+
+.sanskrit-fire-write-wrap.is-fading {
+  opacity: 0;
+}
+
+.sanskrit-fire-text {
+  display: block;
+  margin: 0;
+  width: calc(100% - 16px);
+  font-weight: 900;
+  font-size: clamp(17px, 2.45vw, 42px);
+  letter-spacing: 0.01em;
+  text-align: center;
+  color: #ffd067;
+  white-space: nowrap;
+  text-shadow:
+    0 0 8px rgba(244, 195, 90, 0.82),
+    0 0 20px rgba(240, 122, 38, 0.75),
+    0 0 30px rgba(196, 81, 19, 0.62);
+  animation: fire-flicker 1.8s ease-in-out infinite;
+}
+
+.sanskrit-caret {
+  display: inline-block;
+  margin-left: 3px;
+  color: rgba(255, 225, 156, 0.95);
+  animation: mantra-caret 0.75s steps(1, end) infinite;
+}
+
+@keyframes mantra-caret {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fire-flicker {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.2);
+  }
+}
+
+@media (max-width: 640px) {
+  .sanskrit-fire-write-wrap {
+    padding: 7px 0;
+  }
+
+  .sanskrit-fire-text {
+    width: calc(100% - 8px);
+    font-size: clamp(9.8px, 2.7vw, 13.2px);
+    letter-spacing: 0.002em;
   }
 }

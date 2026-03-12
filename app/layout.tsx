@@ -1,5 +1,21 @@
 import type { Metadata } from "next";
+import { Caveat, Hind, Inter, Kalam, Noto_Serif_Devanagari, Yatra_One } from "next/font/google";
 import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const hind = Hind({
+  subsets: ["latin", "devanagari"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-hind"
+});
+const caveat = Caveat({ subsets: ["latin"], variable: "--font-caveat" });
+const kalam = Kalam({ subsets: ["latin", "devanagari"], weight: ["400", "700"], variable: "--font-kalam" });
+const notoSerifDev = Noto_Serif_Devanagari({
+  subsets: ["devanagari"],
+  weight: ["600", "700"],
+  variable: "--font-noto-serif-devanagari"
+});
+const yatraOne = Yatra_One({ subsets: ["latin"], weight: "400", variable: "--font-yatra-one" });
 
 export const metadata: Metadata = {
   title: "Shri Ram Navami Bhavya Shobha Yatra 2026",
@@ -14,8 +30,8 @@ const bootstrapLanguageScript = `
   var valid = ["en", "hi", "hing"];
   var force = document.documentElement.getAttribute("data-force-lang");
   var stored = localStorage.getItem("site_lang");
-  var lang = force || stored || "en";
-  if (valid.indexOf(lang) === -1) lang = "en";
+  var lang = force || stored || "hing";
+  if (valid.indexOf(lang) === -1) lang = "hing";
 
   function applyLanguage(current) {
     document.documentElement.setAttribute("data-site-lang", current);
@@ -51,7 +67,7 @@ const bootstrapLanguageScript = `
   };
 
   window.__getSiteLang = function () {
-    return document.documentElement.getAttribute("data-site-lang") || "en";
+    return document.documentElement.getAttribute("data-site-lang") || "hing";
   };
 
   window.addEventListener("shri-ram-overrides-change", function () {
@@ -74,7 +90,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootstrapLanguageScript }} />
       </head>
-      <body className="font-body antialiased">{children}</body>
+      <body
+        className={`${inter.variable} ${hind.variable} ${caveat.variable} ${kalam.variable} ${notoSerifDev.variable} ${yatraOne.variable} font-body antialiased`}
+      >
+        {children}
+      </body>
     </html>
   );
 }

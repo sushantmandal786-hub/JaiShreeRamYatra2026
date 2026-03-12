@@ -1,70 +1,81 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { DonationForms } from "@/components/DonationForms";
-import { EventMetaBar } from "@/components/EventMetaBar";
-import { FaqAccordion } from "@/components/FaqAccordion";
 import { FundUsagePie } from "@/components/FundUsagePie";
+import { HeroMouthChants } from "@/components/HeroMouthChants";
 import { HeroParticles } from "@/components/HeroParticles";
 import { LangText } from "@/components/LangText";
 import { LiveCounters } from "@/components/LiveCounters";
+import { MantraTypewriterBar } from "@/components/MantraTypewriterBar";
 import { MarqueeTicker } from "@/components/MarqueeTicker";
 import { PageLoader } from "@/components/PageLoader";
+import { RecentDonations } from "@/components/RecentDonations";
 import { SiteHeader } from "@/components/SiteHeader";
 import { StickyDonateBar } from "@/components/StickyDonateBar";
 import { YouTubeMusicFab } from "@/components/YouTubeMusicFab";
 import { useDonateSettings } from "@/hooks/useDonateSettings";
+import { useSiteOverrides } from "@/hooks/useSiteOverrides";
 import { useScrollAnimations } from "@/hooks/useScrollAnimations";
+import {
+  resolveHeroBackground,
+  resolveHeroOpacity,
+  resolveNewsletterPosts,
+  resolveOrganizer,
+  resolveYatraTimeline
+} from "@/lib/overrides";
 import { EVENT_DETAILS } from "@/lib/site-config";
 
 const impactBlocks = [
   {
-    title: "Prabhu Path Lighting",
-    text: "Safe illuminated route setup for evening darshan and procession flow."
+    title: "Route Lighting Seva",
+    text: "Devotional pathway lights across the route for safe, peaceful darshan movement."
   },
   {
-    title: "Seva Essentials",
-    text: "Water, first-aid, sanitation and volunteer kits for all yatris."
+    title: "Jal Seva & First-Aid",
+    text: "Drinking water points, medical aid, and volunteer support for yatris of all ages."
   },
   {
-    title: "Bhajan & Sound",
-    text: "Devotional sound systems and kirtan support at key stoppages."
+    title: "Bhajan & Sound Setup",
+    text: "Kirtan sound arrangements and devotional announcements at key yatra stoppages."
   },
   {
-    title: "Prasad Distribution",
-    text: "Community prasad preparation and respectful serving at scale."
+    title: "Prasad Annaseva",
+    text: "Hygienic prasad preparation and community-wide distribution with discipline and respect."
   },
   {
-    title: "Post-Yatra Cleanup",
-    text: "Route restoration and eco-conscious cleanup after the yatra."
+    title: "Clean Yatra Mission",
+    text: "Post-yatra cleanup and route restoration so our seva leaves behind only blessings."
   }
 ];
 
 const testimonialCards = [
   {
     no: "01",
-    quote: "The yatra made our entire mohalla feel like one family in devotion.",
+    quote: "The entire neighborhood felt united in devotion. It truly became one Ram parivar.",
     name: "Local Devotee, Rupaspur"
   },
   {
     no: "02",
-    quote: "Donation process was smooth and transparent. Every rupee felt meaningful.",
+    quote: "Donation was quick, transparent, and respectful. Every contribution felt purposeful.",
     name: "Seva Contributor, Patna"
   },
   {
     no: "03",
-    quote: "Volunteer coordination was disciplined, warm and truly spiritual.",
+    quote: "Volunteer management was disciplined and kind. The spiritual energy was unforgettable.",
     name: "Youth Volunteer"
   }
 ];
 
 const features = [
-  "24/7 support through Yatra helpline contacts.",
-  "Clear route, timing and seva updates for families.",
-  "Simple UPI donations with instant participation.",
-  "Open counters and transparent fund usage blocks.",
-  "Volunteer onboarding for on-ground coordination."
+  "24/7 yatra helpline for guidance and support.",
+  "Clear route and timing updates for all families.",
+  "Instant UPI donation flow with one tap.",
+  "Visible counters and transparent fund usage.",
+  "Volunteer onboarding for on-ground coordination.",
+  "Safe, disciplined, and devotion-first atmosphere."
 ];
 
 const galleryItems = [
@@ -78,18 +89,18 @@ const galleryItems = [
 
 const communityCards = [
   {
-    title: "School youth joining seva briefing",
-    text: "Training and route discipline session with local students.",
+    title: "Yuva Seva Orientation",
+    text: "Local youth receiving route, discipline and emergency seva briefing.",
     image: "/assets/moment1.jpg"
   },
   {
-    title: "Women-led bhajan mandali participation",
-    text: "Neighborhood bhajan groups preparing for the grand day.",
+    title: "Bhajan Mandali Preparation",
+    text: "Women-led devotional groups preparing bhajans for the yatra day.",
     image: "/assets/moment2.jpg"
   },
   {
-    title: "Samuhik prasad planning committee",
-    text: "Joint planning for quality prasad and smooth distribution.",
+    title: "Prasad Seva Planning",
+    text: "Community coordination for clean preparation and smooth prasad distribution.",
     image: "/assets/moment3.jpg"
   }
 ];
@@ -97,6 +108,17 @@ const communityCards = [
 export function HomePage() {
   useScrollAnimations();
   const { upiUrl, donateLabel } = useDonateSettings({ amount: 501 });
+  const overrides = useSiteOverrides();
+  const heroBackground = resolveHeroBackground(overrides);
+  const heroOpacity = resolveHeroOpacity(overrides);
+  const organizer = resolveOrganizer(overrides);
+  const newsletterPosts = resolveNewsletterPosts(overrides);
+  const yatraTimeline = resolveYatraTimeline(overrides);
+  const [organizerImage, setOrganizerImage] = useState(organizer.image);
+
+  useEffect(() => {
+    setOrganizerImage(organizer.image);
+  }, [organizer.image]);
 
   return (
     <main className="bg-ink text-cream" id="top">
@@ -104,115 +126,131 @@ export function HomePage() {
       <SiteHeader />
       <MarqueeTicker />
 
-      <section className="relative h-[185svh] bg-hero-noise">
+      <section className="relative h-[225svh] bg-hero-noise">
         <div className="pointer-events-none absolute inset-0">
-          <Image src="/assets/hero_yatra.jpg" alt="" fill className="object-cover opacity-20" priority />
-        </div>
-        <div className="sticky top-[104px] flex h-[calc(100svh-104px)] items-stretch overflow-hidden">
-          <HeroParticles />
           <Image
-            src="/assets/hanuman_chanting.GIF"
+            src={heroBackground}
             alt=""
-            width={540}
-            height={540}
-            className="pointer-events-none absolute -bottom-4 right-2 hidden h-auto w-[34vw] max-w-[440px] opacity-30 lg:block"
+            fill
             priority
+            className="object-cover object-center"
+            style={{ opacity: heroOpacity }}
           />
+          <div className="absolute inset-0 bg-[linear-gradient(110deg,rgba(15,10,8,0.86)_0%,rgba(15,10,8,0.68)_44%,rgba(15,10,8,0.9)_100%)]" />
+        </div>
 
-          <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-6 px-4 py-4 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:gap-8 lg:py-6">
-            <div className="flex flex-col justify-between gap-5">
-              <div className="space-y-4">
-                <div data-hero-reveal className="overflow-hidden rounded-2xl border border-gold/30 bg-black/25 p-1 shadow-glow">
-                  <Image
-                    src="/assets/ram-mandir-glow.png"
-                    alt="Ram mandir glow artwork"
-                    width={1200}
-                    height={420}
-                    className="h-40 w-full animate-pulse-glow rounded-xl object-cover sm:h-52"
-                    priority
-                  />
-                </div>
+        <div className="sticky top-[74px] flex h-[calc(100svh-74px)] items-stretch overflow-hidden">
+          <HeroParticles />
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            <HeroMouthChants />
+          </div>
 
-                <h1
-                  data-hero-reveal
-                  className="text-balance text-3xl font-semibold leading-tight tracking-tight text-cream sm:text-4xl lg:text-5xl"
-                >
-                  <span className="hero-underline">
-                    <LangText
-                      en="Join the Grand Shri Ram Navami Shobha Yatra 2026"
-                      hi="भव्य श्री राम नवमी शोभा यात्रा 2026 में शामिल हों"
-                      hing="Grand Shri Ram Navami Shobha Yatra 2026 mein shamil ho"
-                      textKey="hero_title"
-                    />
-                  </span>
-                </h1>
-
-                <p data-hero-reveal className="max-w-2xl text-sm text-cream/80 sm:text-lg">
+          <div className="relative z-10 mx-auto h-full w-full max-w-screen-xl px-4 py-4 sm:px-6 lg:px-8 lg:py-5 xl:px-10">
+            <div data-hero-reveal className="max-w-3xl space-y-4 lg:absolute lg:left-8 lg:top-8 lg:max-w-[54%]">
+              <h1 className="text-balance text-3xl font-semibold leading-tight tracking-tight text-cream sm:text-4xl lg:text-6xl">
+                <span className="hero-underline">
                   <LangText
-                    en="Be part of a divine celebration of faith, unity and devotion."
-                    hi="आस्था, एकता और भक्ति के दिव्य उत्सव का हिस्सा बनें।"
-                    hing="Aastha, ekta aur bhakti ke divya utsav ka hissa banein."
-                    textKey="hero_subtitle"
+                    en="Join the Grand Shri Ram Navami Shobha Yatra 2026"
+                    hi="भव्य श्री राम नवमी शोभा यात्रा 2026 में शामिल हों"
+                    hing="Grand Shri Ram Navami Shobha Yatra 2026 mein shamil ho"
+                    textKey="hero_title"
                   />
-                </p>
-              </div>
+                </span>
+              </h1>
 
-              <div data-hero-reveal>
-                <CountdownTimer />
+              <p className="max-w-2xl text-sm text-cream/80 sm:text-lg">
+                <LangText
+                  en="Be part of a divine celebration of faith, unity and devotion."
+                  hi="आस्था, एकता और भक्ति के दिव्य उत्सव का हिस्सा बनें।"
+                  hing="Aastha, ekta aur bhakti ke divya utsav ka hissa banein."
+                  textKey="hero_subtitle"
+                />
+              </p>
+            </div>
+
+            <div data-hero-reveal className="mt-4 max-w-[220px] lg:mt-0 lg:absolute lg:bottom-12 lg:left-6 lg:w-[220px]">
+              <div className="glass flex items-center gap-2 rounded-xl p-2">
+                <Image
+                  src={organizerImage}
+                  alt={organizer.name}
+                  width={92}
+                  height={92}
+                  onError={() => setOrganizerImage("/assets/nagesh.jpg")}
+                  className="h-9 w-9 rounded-full border border-gold/45 object-cover"
+                />
+                <div className="min-w-0">
+                  <p className="text-[9px] uppercase tracking-[0.14em] text-gold/85">Organised by</p>
+                  <p className="truncate text-xs font-semibold text-cream">{organizer.name}</p>
+                </div>
               </div>
             </div>
 
-            <div className="flex flex-col justify-between gap-5">
+            <div className="mt-5 lg:absolute lg:bottom-10 lg:left-1/2 lg:w-full lg:max-w-[620px] lg:-translate-x-1/2">
               <div data-hero-reveal>
-                <EventMetaBar />
+                <CountdownTimer />
               </div>
-
-              <div data-hero-reveal>
-                <LiveCounters />
-              </div>
-
-              <div data-hero-reveal className="glass rounded-2xl p-4">
-                <p className="text-xs uppercase tracking-[0.18em] text-gold/85">Organised by</p>
-                <p className="mt-2 text-sm text-cream/80 sm:text-base">
-                  {EVENT_DETAILS.organisers[0]}
-                  <br />
-                  {EVENT_DETAILS.organisers[1]}
-                </p>
+              <div data-hero-reveal className="mx-auto mt-2 w-fit max-w-[96vw] rounded-xl border border-gold/35 bg-[linear-gradient(120deg,rgba(255,253,247,0.18),rgba(255,253,247,0.1))] px-3 py-2 backdrop-blur md:px-4">
+                <div className="flex flex-wrap items-center justify-center gap-2 text-center text-[10px] text-cream/88 sm:text-[11px]">
+                  <span className="font-semibold text-gold">Date & Time:</span>
+                  <span>{EVENT_DETAILS.dateLabel}</span>
+                  <a
+                    href={EVENT_DETAILS.mapUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 rounded-full border border-gold/45 px-2.5 py-1 text-gold transition hover:bg-gold/10"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5">
+                      <path d="M12 13.4a3.4 3.4 0 1 0 0-6.8 3.4 3.4 0 0 0 0 6.8Z" stroke="currentColor" strokeWidth="1.6" />
+                      <path
+                        d="M4.8 9.9C4.8 15.4 12 21 12 21s7.2-5.6 7.2-11.1A7.2 7.2 0 1 0 4.8 9.9Z"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    Open Map
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="about" className="section-divider bg-cream py-16 text-ink sm:py-20">
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+      <div className="after-hero-canvas">
+        <MantraTypewriterBar />
+
+        <section id="about" className="section-divider bg-cream py-16 text-ink sm:py-20">
+        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
           <h2 data-reveal className="text-3xl font-semibold leading-tight sm:text-4xl lg:text-5xl">
             <LangText
-              en="Faith talks. The Yatra talks back."
-              hi="आस्था बोलती है। यात्रा उत्तर देती है।"
-              hing="Faith bolti hai. Yatra jawab deti hai."
+              en="A Yatra Powered by Faith and Unity"
+              hi="आस्था और एकता से संचालित भव्य यात्रा"
+              hing="Aastha aur ekta se chalti bhavya yatra"
               textKey="about_heading"
             />
           </h2>
           <p data-reveal data-sequence={1} className="mt-5 max-w-3xl text-base text-maroon/85 sm:text-lg">
-            This homepage follows Cleo’s stacked storytelling rhythm: bold hero, section-by-section persuasion,
-            transparent proof, and immediate conversion to donation and volunteer action.
+            Shri Ram Navami Bhavya Shobha Yatra is a collective expression of bhakti, discipline and unity.
+            With your participation and support, this yatra becomes a sacred experience for every family in
+            Rupaspur and nearby communities.
           </p>
         </div>
-      </section>
+        </section>
 
-      <section id="donation-impact" className="section-divider bg-ink py-16 sm:py-20">
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+        <section id="donation-impact" className="section-divider bg-ink py-16 sm:py-20">
+        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
           <h2 data-reveal className="text-3xl font-semibold text-cream sm:text-4xl">
             <LangText
-              en="Talk therapy for your soul"
-              hi="आत्मा के लिए संवाद-सेवा"
-              hing="Soul ke liye devotional talk therapy"
+              en="Where Your Donation Creates Real Seva"
+              hi="जहां आपका दान वास्तविक सेवा बनता है"
+              hing="Jahan aapka daan real seva mein badalta hai"
               textKey="impact_heading"
             />
           </h2>
           <p data-reveal data-sequence={1} className="mt-3 max-w-3xl text-cream/75 sm:text-lg">
-            Why your donation matters. Five direct impact channels that turn faith into on-ground support.
+            Your contribution directly supports route arrangements, seva operations and spiritual programs.
           </p>
 
           <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
@@ -230,43 +268,48 @@ export function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+        </section>
 
-      <section className="section-divider bg-cream py-16 text-ink sm:py-20">
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+        <section className="section-divider bg-cream py-16 text-ink sm:py-20">
+        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
           <h2 data-reveal className="text-3xl font-semibold text-maroon sm:text-4xl">
             <LangText
-              en="Get your devotion off your mind"
-              hi="भक्ति की चिंता मन से उतारिए"
-              hing="Devotion ko tension-free banaiye"
+              en="Complete Transparency in Every Contribution"
+              hi="हर योगदान में पूर्ण पारदर्शिता"
+              hing="Har contribution mein complete transparency"
               textKey="transparency_heading"
             />
           </h2>
           <p data-reveal data-sequence={1} className="mt-3 max-w-3xl text-maroon/80 sm:text-lg">
-            Transparent fund usage with clear category-wise reporting.
+            We present category-wise fund allocation so every devotee can contribute with full trust.
           </p>
 
           <div data-reveal data-sequence={2} className="mt-8">
             <FundUsagePie />
           </div>
         </div>
-      </section>
+        </section>
 
-      <section className="section-divider bg-ink py-16 sm:py-20">
-        <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+        <section className="section-divider bg-ink py-16 sm:py-20">
+        <div className="mx-auto grid w-full max-w-screen-xl gap-8 px-4 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:px-8 xl:px-10">
           <div>
             <h2 data-reveal className="text-3xl font-semibold sm:text-4xl">
               <LangText
-                en="Let devotion conquer every obstacle"
-                hi="भक्ति हर बाधा को पार करे"
-                hing="Devotion har obstacle ko jeet le"
+                en="Simple, Fast and Sacred Way to Donate"
+                hi="दान का सरल, तेज और पवित्र मार्ग"
+                hing="Donate karne ka simple, fast aur sacred tareeka"
                 textKey="donate_heading"
               />
             </h2>
             <p data-reveal data-sequence={1} className="mt-3 text-cream/75 sm:text-lg">
-              Easy donation with UPI deep links, QR scan and direct seva desk contact.
+              Offer your support instantly through UPI links, QR scan, and direct seva-desk assistance.
             </p>
-            <div data-reveal data-sequence={2} className="mt-6 flex flex-wrap gap-3">
+
+            <div data-reveal data-sequence={2} className="mt-6 max-w-2xl">
+              <LiveCounters />
+            </div>
+
+            <div data-reveal data-sequence={3} className="mt-6 flex flex-wrap gap-3">
               <a
                 href={upiUrl}
                 className="rounded-full bg-saffron px-5 py-3 text-sm font-semibold text-ink transition hover:bg-gold"
@@ -306,15 +349,15 @@ export function HomePage() {
             />
           </div>
         </div>
-      </section>
+        </section>
 
       <section className="section-divider bg-cream py-16 text-ink sm:py-20">
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
           <h2 data-reveal className="text-3xl font-semibold text-maroon sm:text-4xl">
             <LangText
-              en="The community has spoken (and it loves the Yatra)"
-              hi="समुदाय बोल चुका है (और यात्रा से प्रेम करता है)"
-              hing="Community bol chuka hai (aur yatra se pyaar karta hai)"
+              en="What Devotees Say About the Yatra"
+              hi="यात्रा के बारे में श्रद्धालुओं की वाणी"
+              hing="Yatra ke baare mein devotees kya kehte hain"
               textKey="testimonial_heading"
             />
           </h2>
@@ -334,15 +377,15 @@ export function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+        </section>
 
-      <section className="section-divider bg-ink py-16 sm:py-20">
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+        <section className="section-divider bg-ink py-16 sm:py-20">
+        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
           <h2 data-reveal className="text-3xl font-semibold sm:text-4xl">
             <LangText
-              en="Finally, a Yatra without boundaries"
-              hi="अंततः, बिना सीमाओं की यात्रा"
-              hing="Finally, ek boundary-free yatra"
+              en="Everything Needed for a Smooth Yatra"
+              hi="सुगम यात्रा के लिए हर आवश्यक व्यवस्था"
+              hing="Smooth yatra ke liye har zaroori vyavastha"
               textKey="feature_heading"
             />
           </h2>
@@ -360,15 +403,85 @@ export function HomePage() {
             ))}
           </ul>
         </div>
-      </section>
+        </section>
 
-      <section id="gallery" className="section-divider bg-cream py-16 text-ink sm:py-20">
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+        <section id="timeline" className="section-divider bg-cream py-16 text-ink sm:py-20">
+        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
+          <h2 data-reveal className="text-3xl font-semibold text-maroon sm:text-4xl">
+            Yatra Timeline Updates
+          </h2>
+          <p data-reveal data-sequence={1} className="mt-3 max-w-3xl text-maroon/80 sm:text-lg">
+            Track all major stop points, timings and updates of the procession in one place.
+          </p>
+
+          <div className="mt-8 grid gap-3 sm:gap-4">
+            {yatraTimeline.map((point, idx) => (
+              <article
+                key={`${point.time}-${point.place}-${idx}`}
+                data-pop="true"
+                data-sequence={idx + 1}
+                className="rounded-2xl border border-maroon/22 bg-white/95 px-4 py-4 shadow-[0_12px_28px_rgba(111,28,20,0.08)] sm:px-5"
+              >
+                <div className="grid gap-2 sm:grid-cols-[130px_1fr] sm:items-center">
+                  <p className="text-base font-bold text-deep-saffron sm:text-lg">{point.time}</p>
+                  <div>
+                    <p className="text-base font-semibold text-maroon sm:text-lg">{point.place}</p>
+                    {point.note ? <p className="mt-1 text-sm text-maroon/76">{point.note}</p> : null}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+        </section>
+
+        <section id="newsletter" className="section-divider bg-ink py-16 sm:py-20">
+        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
+          <h2 data-reveal className="text-3xl font-semibold text-cream sm:text-4xl">
+            Newsletter & Community Posts
+          </h2>
+          <p data-reveal data-sequence={1} className="mt-3 max-w-3xl text-cream/78 sm:text-lg">
+            Regular updates from ground volunteers, route teams, and seva announcements.
+          </p>
+
+          <div className="mt-8 grid gap-4 lg:grid-cols-2">
+            {newsletterPosts.map((post, idx) => (
+              <article key={`${post.title}-${idx}`} data-pop="true" data-sequence={idx + 1} className="glass rounded-2xl p-4 sm:p-5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <h3 className="text-lg font-semibold text-gold sm:text-xl">{post.title}</h3>
+                  <p className="text-xs uppercase tracking-[0.14em] text-cream/60">
+                    {Number.isNaN(new Date(post.date).getTime())
+                      ? post.date
+                      : new Date(post.date).toLocaleDateString("en-IN", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric"
+                        })}
+                  </p>
+                </div>
+                <p className="mt-3 text-sm leading-relaxed text-cream/85 sm:text-base">{post.content}</p>
+                {post.image ? (
+                  <Image
+                    src={post.image}
+                    alt={post.title}
+                    width={880}
+                    height={460}
+                    className="mt-4 h-48 w-full rounded-xl object-cover"
+                  />
+                ) : null}
+              </article>
+            ))}
+          </div>
+        </div>
+        </section>
+
+        <section id="gallery" className="section-divider bg-cream py-16 text-ink sm:py-20">
+        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
           <h2 data-reveal className="text-3xl font-semibold text-maroon sm:text-4xl">
             <LangText
-              en="New moments from previous Yatras"
-              hi="पिछली यात्राओं की नई झलकियाँ"
-              hing="Previous yatra ke naye moments"
+              en="Sacred Moments from Previous Yatras"
+              hi="पिछली यात्राओं के पावन क्षण"
+              hing="Previous yatra ke pavitra moments"
               textKey="gallery_heading"
             />
           </h2>
@@ -392,15 +505,15 @@ export function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+        </section>
 
-      <section className="section-divider bg-ink py-16 sm:py-20">
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+        <section className="section-divider bg-ink py-16 sm:py-20">
+        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
           <h2 data-reveal className="text-3xl font-semibold sm:text-4xl">
             <LangText
-              en="In the community"
-              hi="समुदाय में"
-              hing="In the community"
+              en="Bhakti Across the Community"
+              hi="समुदाय में गूंजती भक्ति"
+              hing="Community bhar mein goonjti bhakti"
               textKey="community_heading"
             />
           </h2>
@@ -426,10 +539,10 @@ export function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+        </section>
 
-      <section className="section-divider bg-cream py-16 text-ink sm:py-20">
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+        <section className="section-divider bg-cream py-16 text-ink sm:py-20">
+        <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-10">
           <h2 data-reveal className="text-balance text-3xl font-semibold text-maroon sm:text-4xl lg:text-5xl">
             <LangText
               en="Ram Ka Kaaj Hai, Aapka Saath Anmol Hai"
@@ -440,9 +553,9 @@ export function HomePage() {
           </h2>
           <p data-reveal data-sequence={1} className="mt-3 text-lg font-medium text-deep-saffron sm:text-xl">
             <LangText
-              en="Donate Now & Be Blessed"
-              hi="अभी दान करें और आशीर्वाद पाएं"
-              hing="Donate now aur blessed baniye"
+              en="Donate Now and Receive Blessings"
+              hi="अभी दान करें और आशीर्वाद प्राप्त करें"
+              hing="Donate now aur ashirwad paayen"
               textKey="final_cta_subtitle"
             />
           </p>
@@ -451,8 +564,54 @@ export function HomePage() {
             <DonationForms />
           </div>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_1fr]">
-            <div>
+          <div className="mt-6">
+            <RecentDonations />
+          </div>
+
+          <div className="mt-10">
+              <article className="mb-6 overflow-hidden rounded-2xl border border-maroon/20 bg-white">
+                <div className="grid gap-4 p-4 sm:grid-cols-[120px_1fr] sm:items-center">
+                  <Image
+                    src={organizerImage}
+                    alt={organizer.name}
+                    width={220}
+                    height={220}
+                    onError={() => setOrganizerImage("/assets/nagesh.jpg")}
+                    className="h-28 w-28 rounded-xl border border-maroon/15 object-cover"
+                  />
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.16em] text-deep-saffron">Primary Organizer</p>
+                    <h4 className="mt-1 text-xl font-semibold text-maroon">{organizer.name}</h4>
+                    <p className="text-sm text-maroon/80">{organizer.designation}</p>
+                    <div className="mt-3 flex flex-wrap gap-2 text-xs sm:text-sm">
+                      <a className="rounded-full border border-maroon/25 px-3 py-1.5 text-maroon" href={`tel:${organizer.phone}`}>
+                        Call
+                      </a>
+                      {organizer.whatsapp ? (
+                        <a
+                          className="rounded-full border border-maroon/25 px-3 py-1.5 text-maroon"
+                          href={`https://wa.me/91${organizer.whatsapp.replace(/\D/g, "")}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          WhatsApp
+                        </a>
+                      ) : null}
+                      {organizer.facebook ? (
+                        <a
+                          className="rounded-full border border-maroon/25 px-3 py-1.5 text-maroon"
+                          href={organizer.facebook}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Facebook
+                        </a>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              </article>
+
               <h3 data-reveal className="text-2xl font-semibold text-maroon">
                 Contact & Organisers
               </h3>
@@ -460,6 +619,11 @@ export function HomePage() {
                 {EVENT_DETAILS.organisers[0]}
                 <br />
                 {EVENT_DETAILS.organisers[1]}
+                <br />
+                <br />
+                Date: {EVENT_DETAILS.dateLabel}
+                <br />
+                Location: {EVENT_DETAILS.location}
               </p>
 
               <div className="mt-4 flex flex-wrap gap-2">
@@ -473,23 +637,14 @@ export function HomePage() {
                   </a>
                 ))}
               </div>
-            </div>
-
-            <div>
-              <h3 data-reveal className="text-2xl font-semibold text-maroon">
-                FAQs
-              </h3>
-              <div className="mt-4">
-                <FaqAccordion />
-              </div>
-            </div>
           </div>
         </div>
-      </section>
+        </section>
 
-      <footer className="section-divider bg-ink py-10 text-center text-xs text-cream/60 sm:text-sm">
-        <p>© 2026 Shri Ram Navami Bhavya Shobha Yatra • Patna, Bihar</p>
-      </footer>
+        <footer className="section-divider bg-ink/80 py-16 text-center text-xs text-cream/85 sm:text-sm">
+          <p>© 2026 Shri Ram Navami Bhavya Shobha Yatra • Patna, Bihar</p>
+        </footer>
+      </div>
 
       <StickyDonateBar />
       <YouTubeMusicFab />

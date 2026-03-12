@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import { LangText } from "@/components/LangText";
 import { useDonateSettings } from "@/hooks/useDonateSettings";
 import { submitToAppsScript } from "@/lib/form-submit";
@@ -11,7 +11,16 @@ type FormStatus = "idle" | "loading" | "success" | "error";
 export function DonationForms() {
   const [donationStatus, setDonationStatus] = useState<FormStatus>("idle");
   const [volunteerStatus, setVolunteerStatus] = useState<FormStatus>("idle");
-  const { upiUrl, upiNumber, donateLabel } = useDonateSettings({ amount: 501 });
+  const { upiUrl, upiId, upiNumber, donateLabel } = useDonateSettings({ amount: 501 });
+  const upiQuery = useMemo(() => upiUrl.replace(/^upi:\/\/pay\?/, ""), [upiUrl]);
+  const gpayIntent = useMemo(
+    () => `intent://pay?${upiQuery}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`,
+    [upiQuery]
+  );
+  const phonePeIntent = useMemo(
+    () => `intent://pay?${upiQuery}#Intent;scheme=upi;package=com.phonepe.app;end`,
+    [upiQuery]
+  );
 
   const handleDonation = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -56,8 +65,8 @@ export function DonationForms() {
 
   return (
     <div className="grid gap-5 lg:grid-cols-2">
-      <article className="glass rounded-2xl p-4 sm:p-6" id="donate-now">
-        <h3 className="text-xl font-semibold text-gold">
+      <article className="rounded-2xl border border-maroon/20 bg-white p-4 shadow-[0_14px_30px_rgba(111,28,20,0.08)] sm:p-6" id="donate-now">
+        <h3 className="text-xl font-semibold text-maroon">
           <LangText
             en="Donate for Yatra Seva"
             hi="यात्रा सेवा हेतु दान"
@@ -65,7 +74,7 @@ export function DonationForms() {
             textKey="donation_form_heading"
           />
         </h3>
-        <p className="mt-1 text-sm text-cream/75">
+        <p className="mt-1 text-sm text-maroon/80">
           <LangText
             en="Use UPI instant payment or submit this form for pledge confirmation."
             hi="तुरंत UPI भुगतान करें या प्रतिज्ञा पुष्टि के लिए यह फॉर्म भरें।"
@@ -73,7 +82,8 @@ export function DonationForms() {
             textKey="donation_form_subheading"
           />
         </p>
-        <p className="mt-2 text-xs text-gold/90">UPI Number: {upiNumber}</p>
+        <p className="mt-2 text-xs text-deep-saffron">UPI Number: {upiNumber}</p>
+        <p className="text-xs text-maroon/70">UPI Payee: {upiId}</p>
 
         <div className="mt-4 flex flex-wrap gap-3">
           <a
@@ -93,7 +103,7 @@ export function DonationForms() {
           </a>
           <a
             href={`https://wa.me/91${EVENT_DETAILS.contacts[0]}`}
-            className="rounded-full border border-gold/50 px-4 py-2 text-sm font-semibold text-gold transition hover:bg-gold/10"
+            className="rounded-full border border-deep-saffron/45 px-4 py-2 text-sm font-semibold text-deep-saffron transition hover:bg-deep-saffron/10"
           >
             <LangText
               en="WhatsApp Seva Desk"
@@ -102,6 +112,12 @@ export function DonationForms() {
               textKey="whatsapp_desk_label"
             />
           </a>
+          <a href={gpayIntent} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 hover:bg-maroon/5">
+            Open in GPay
+          </a>
+          <a href={phonePeIntent} className="rounded-full border border-maroon/30 px-3 py-2 text-xs font-semibold text-maroon/90 hover:bg-maroon/5">
+            Open in PhonePe
+          </a>
         </div>
 
         <form className="mt-4 space-y-3" onSubmit={handleDonation}>
@@ -109,13 +125,13 @@ export function DonationForms() {
             name="name"
             required
             placeholder="Your Name"
-            className="w-full rounded-xl border border-white/15 bg-black/20 px-4 py-3 text-sm outline-none placeholder:text-cream/50 focus:border-gold/50"
+            className="w-full rounded-xl border border-maroon/20 bg-cream px-4 py-3 text-sm text-maroon outline-none placeholder:text-maroon/40 focus:border-deep-saffron/55"
           />
           <input
             name="phone"
             required
             placeholder="Phone Number"
-            className="w-full rounded-xl border border-white/15 bg-black/20 px-4 py-3 text-sm outline-none placeholder:text-cream/50 focus:border-gold/50"
+            className="w-full rounded-xl border border-maroon/20 bg-cream px-4 py-3 text-sm text-maroon outline-none placeholder:text-maroon/40 focus:border-deep-saffron/55"
           />
           <input
             name="amount"
@@ -123,13 +139,13 @@ export function DonationForms() {
             type="number"
             min={11}
             placeholder="Donation Amount (INR)"
-            className="w-full rounded-xl border border-white/15 bg-black/20 px-4 py-3 text-sm outline-none placeholder:text-cream/50 focus:border-gold/50"
+            className="w-full rounded-xl border border-maroon/20 bg-cream px-4 py-3 text-sm text-maroon outline-none placeholder:text-maroon/40 focus:border-deep-saffron/55"
           />
           <textarea
             name="note"
             rows={3}
             placeholder="Any message for seva team"
-            className="w-full rounded-xl border border-white/15 bg-black/20 px-4 py-3 text-sm outline-none placeholder:text-cream/50 focus:border-gold/50"
+            className="w-full rounded-xl border border-maroon/20 bg-cream px-4 py-3 text-sm text-maroon outline-none placeholder:text-maroon/40 focus:border-deep-saffron/55"
           />
 
           <button
@@ -155,8 +171,8 @@ export function DonationForms() {
         </form>
       </article>
 
-      <article className="glass rounded-2xl p-4 sm:p-6">
-        <h3 className="text-xl font-semibold text-gold">
+      <article className="rounded-2xl border border-maroon/20 bg-white p-4 shadow-[0_14px_30px_rgba(111,28,20,0.08)] sm:p-6">
+        <h3 className="text-xl font-semibold text-maroon">
           <LangText
             en="Volunteer for Seva"
             hi="सेवा हेतु वॉलंटियर बनें"
@@ -164,7 +180,7 @@ export function DonationForms() {
             textKey="volunteer_form_heading"
           />
         </h3>
-        <p className="mt-1 text-sm text-cream/75">
+        <p className="mt-1 text-sm text-maroon/80">
           <LangText
             en="Join coordination, crowd support, prasad distribution and cleanup seva."
             hi="समन्वय, भीड़ सहयोग, प्रसाद वितरण और स्वच्छता सेवा में शामिल हों।"
@@ -178,30 +194,30 @@ export function DonationForms() {
             name="name"
             required
             placeholder="Volunteer Name"
-            className="w-full rounded-xl border border-white/15 bg-black/20 px-4 py-3 text-sm outline-none placeholder:text-cream/50 focus:border-gold/50"
+            className="w-full rounded-xl border border-maroon/20 bg-cream px-4 py-3 text-sm text-maroon outline-none placeholder:text-maroon/40 focus:border-deep-saffron/55"
           />
           <input
             name="phone"
             required
             placeholder="Phone Number"
-            className="w-full rounded-xl border border-white/15 bg-black/20 px-4 py-3 text-sm outline-none placeholder:text-cream/50 focus:border-gold/50"
+            className="w-full rounded-xl border border-maroon/20 bg-cream px-4 py-3 text-sm text-maroon outline-none placeholder:text-maroon/40 focus:border-deep-saffron/55"
           />
           <input
             name="area"
             required
             placeholder="Your Local Area"
-            className="w-full rounded-xl border border-white/15 bg-black/20 px-4 py-3 text-sm outline-none placeholder:text-cream/50 focus:border-gold/50"
+            className="w-full rounded-xl border border-maroon/20 bg-cream px-4 py-3 text-sm text-maroon outline-none placeholder:text-maroon/40 focus:border-deep-saffron/55"
           />
           <input
             name="availability"
             placeholder="Availability (Morning / Afternoon / Full Day)"
-            className="w-full rounded-xl border border-white/15 bg-black/20 px-4 py-3 text-sm outline-none placeholder:text-cream/50 focus:border-gold/50"
+            className="w-full rounded-xl border border-maroon/20 bg-cream px-4 py-3 text-sm text-maroon outline-none placeholder:text-maroon/40 focus:border-deep-saffron/55"
           />
 
           <button
             type="submit"
             disabled={volunteerStatus === "loading"}
-            className="w-full rounded-xl border border-saffron/70 px-4 py-3 text-sm font-semibold text-gold transition hover:bg-saffron/10 disabled:opacity-60"
+            className="w-full rounded-xl border border-deep-saffron/60 px-4 py-3 text-sm font-semibold text-deep-saffron transition hover:bg-saffron/10 disabled:opacity-60"
           >
             {volunteerStatus === "loading" ? (
               "Submitting..."

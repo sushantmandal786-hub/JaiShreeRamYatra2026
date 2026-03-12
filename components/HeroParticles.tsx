@@ -10,6 +10,16 @@ type Particle = {
   r: number;
 };
 
+type Chant = {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  alpha: number;
+  text: string;
+};
+
 export function HeroParticles() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -26,9 +36,11 @@ export function HeroParticles() {
 
     let animation = 0;
     const particles: Particle[] = [];
+    const chants: Chant[] = [];
 
     const createParticles = (width: number, height: number) => {
       particles.length = 0;
+      chants.length = 0;
       const count = Math.max(36, Math.floor(width / 28));
       for (let i = 0; i < count; i += 1) {
         particles.push({
@@ -37,6 +49,19 @@ export function HeroParticles() {
           vx: (Math.random() - 0.5) * 0.3,
           vy: (Math.random() - 0.5) * 0.3,
           r: Math.random() * 1.6 + 0.8
+        });
+      }
+
+      const chantCount = 2;
+      for (let i = 0; i < chantCount; i += 1) {
+        chants.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: Math.random() * 0.07 + 0.06,
+          vy: (Math.random() - 0.5) * 0.03,
+          size: Math.random() * 10 + 18,
+          alpha: Math.random() * 0.08 + 0.1,
+          text: Math.random() > 0.5 ? "राम" : "राम राम"
         });
       }
     };
@@ -67,9 +92,29 @@ export function HeroParticles() {
         }
 
         ctx.beginPath();
-        ctx.fillStyle = "rgba(244, 195, 90, 0.65)";
+        ctx.fillStyle = "rgba(244, 195, 90, 0.72)";
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fill();
+      }
+
+      for (const chant of chants) {
+        chant.x += chant.vx;
+        chant.y += chant.vy;
+
+        if (chant.x > width + 120) {
+          chant.x = -140;
+          chant.y = Math.random() * height;
+        }
+        if (chant.y < -20) {
+          chant.y = height + 20;
+        }
+        if (chant.y > height + 20) {
+          chant.y = -20;
+        }
+
+        ctx.font = `${chant.size}px "Hind", "Noto Sans Devanagari", sans-serif`;
+        ctx.fillStyle = `rgba(255, 235, 198, ${chant.alpha})`;
+        ctx.fillText(chant.text, chant.x, chant.y);
       }
 
       for (let i = 0; i < particles.length; i += 1) {
