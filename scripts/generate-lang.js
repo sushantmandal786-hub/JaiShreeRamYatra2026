@@ -27,8 +27,8 @@ function injectLang(html, lang) {
 }
 
 if (!fs.existsSync(indexPath)) {
-  console.error("Cannot find out/index.html. Run `next build` first.");
-  process.exit(1);
+  console.warn("out/index.html not found (expected when not using static export). Skipping lang variants.");
+  process.exit(0);
 }
 
 const base = fs.readFileSync(indexPath, "utf-8");
