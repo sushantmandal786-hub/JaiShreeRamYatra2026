@@ -39,7 +39,8 @@ export function useSiteOverrides() {
     };
 
     void syncRemote();
-    const interval = window.setInterval(syncRemote, 30000);
+    // Poll more frequently so admin panel changes feel near real-time.
+    const interval = window.setInterval(syncRemote, 10000);
 
     const onFocus = () => {
       void syncRemote();

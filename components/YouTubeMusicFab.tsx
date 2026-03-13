@@ -8,6 +8,7 @@ export function YouTubeMusicFab() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isHiddenByScroll, setIsHiddenByScroll] = useState(false);
+  const userPausedRef = useRef(false);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -27,6 +28,9 @@ export function YouTubeMusicFab() {
 
     const tryAutoplay = async () => {
       try {
+        if (userPausedRef.current) {
+          return;
+        }
         audio.volume = FIXED_VOLUME;
         await audio.play();
       } catch {
@@ -37,7 +41,7 @@ export function YouTubeMusicFab() {
     void tryAutoplay();
 
     const onFirstInteraction = () => {
-      if (audio.paused) {
+      if (audio.paused && !userPausedRef.current) {
         void tryAutoplay();
       }
     };
@@ -85,11 +89,12 @@ export function YouTubeMusicFab() {
       return;
     }
 
+    userPausedRef.current = true;
     audio.pause();
   };
 
   return (
-    <div className="fixed right-3 top-[136px] z-40 flex flex-col items-end gap-2 sm:right-4 sm:top-[118px]">
+    <div className="fixed right-3 top-[176px] z-40 flex flex-col items-end gap-2 sm:right-4 sm:top-[148px]">
       <audio ref={audioRef} src="/assets/ram-chanting-108-times.mp3" loop preload="auto" />
 
       {!isHiddenByScroll && isOpen ? (

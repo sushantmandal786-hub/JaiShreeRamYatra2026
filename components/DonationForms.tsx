@@ -25,20 +25,47 @@ export function DonationForms() {
     amazonIntentUrl,
     upiIdLooksValid,
     donateLabel
-  } = useDonateSettings({ amount: 501 });
+  } = useDonateSettings();
+
+  const askDonationAmount = (): number | null => {
+    const message =
+      "Enter donation amount in INR (minimum ₹100).\n\nQuick options: 501, 1001, 2001, 5001, 10001";
+    const input = window.prompt(message, "501");
+    if (!input) return null;
+    const amount = Number(input.replace(/[^\d]/g, ""));
+    if (!Number.isFinite(amount) || amount < 100) {
+      window.alert("Minimum donation amount is ₹100.");
+      return null;
+    }
+    return Math.round(amount);
+  };
+
+  const buildUpiUrlsForAmount = (amount: number) => {
+    const base = new URL(upiUrl);
+    base.searchParams.set("am", String(amount));
+    const upiWithAmount = base.toString();
+    const query = upiWithAmount.replace(/^upi:\/\/pay\?/, "");
+    const intentWithAmount = `intent://pay?${query}#Intent;scheme=upi;S.browser_fallback_url=${encodeURIComponent(
+      upiWithAmount
+    )};end`;
+    return { upiWithAmount, intentWithAmount, query };
+  };
 
   const openUpiCheckout = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
+    const amount = askDonationAmount();
+    if (!amount) return;
+    const { upiWithAmount, intentWithAmount } = buildUpiUrlsForAmount(amount);
     const isAndroid = /android/i.test(window.navigator.userAgent);
 
     if (isAndroid) {
       const before = Date.now();
-      window.location.href = upiIntentUrl;
+      window.location.href = intentWithAmount;
 
       const fallbackTimer = window.setTimeout(() => {
         if (document.visibilityState === "hidden") return;
         if (Date.now() - before > 3000) return;
-        window.location.href = upiUrl;
+        window.location.href = upiWithAmount;
       }, 2000);
 
       document.addEventListener(
@@ -53,25 +80,28 @@ export function DonationForms() {
       return;
     }
 
-    window.location.href = upiUrl;
+      window.location.href = upiWithAmount;
   };
 
   const handleAppIntent = (intentUrl: string) => (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
+    const amount = askDonationAmount();
+    if (!amount) return;
+    const { upiWithAmount, intentWithAmount } = buildUpiUrlsForAmount(amount);
     const isAndroid = /android/i.test(window.navigator.userAgent);
 
     if (!isAndroid) {
-      window.location.href = upiUrl;
+      window.location.href = upiWithAmount;
       return;
     }
 
     const before = Date.now();
-    window.location.href = intentUrl;
+    window.location.href = intentWithAmount || intentUrl;
 
     const fallbackTimer = window.setTimeout(() => {
       if (document.visibilityState === "hidden") return;
       if (Date.now() - before > 3000) return;
-      window.location.href = upiIntentUrl;
+      window.location.href = intentWithAmount;
     }, 2000);
 
     document.addEventListener(
@@ -83,6 +113,17 @@ export function DonationForms() {
       },
       { once: true }
     );
+  };
+
+  const handleCopy = (value: string, label: string) => async (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    if (!value) return;
+    try {
+      await navigator.clipboard.writeText(value);
+      window.alert(`${label} copied to clipboard.`);
+    } catch {
+      window.prompt(`Copy ${label} manually:`, value);
+    }
   };
 
   const handleDonation = async (event: FormEvent<HTMLFormElement>) => {
@@ -147,6 +188,22 @@ export function DonationForms() {
         </p>
         <p className="mt-2 text-xs text-deep-saffron">UPI Number: {upiNumber}</p>
         <p className="text-xs text-maroon/70">UPI Payee: {upiId}</p>
+        <div className="mt-2 flex flex-wrap gap-2 text-[11px] text-maroon/80">
+          <button
+            type="button"
+            onClick={handleCopy(upiId, "UPI ID")}
+            className="rounded-full border border-maroon/25 px-3 py-1 font-semibold transition hover:bg-maroon/5"
+          >
+            Copy UPI ID
+          </button>
+          <button
+            type="button"
+            onClick={handleCopy(upiNumber, "UPI number")}
+            className="rounded-full border border-maroon/25 px-3 py-1 font-semibold transition hover:bg-maroon/5"
+          >
+            Copy UPI Number
+          </button>
+        </div>
 
         <div className="mt-4 flex flex-wrap gap-3">
           <a

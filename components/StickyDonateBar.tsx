@@ -5,7 +5,7 @@ import { useDonateSettings } from "@/hooks/useDonateSettings";
 
 export function StickyDonateBar() {
   const [visible, setVisible] = useState(false);
-  const { upiUrl, upiIntentUrl, donateLabel } = useDonateSettings({ amount: 501 });
+  const { upiUrl, upiIntentUrl, donateLabel } = useDonateSettings();
 
   useEffect(() => {
     const onScroll = () => {
@@ -19,16 +19,34 @@ export function StickyDonateBar() {
 
   const openUpiCheckout = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
+    const input = window.prompt(
+      "Enter donation amount in INR (minimum ₹100).\n\nQuick options: 501, 1001, 2001, 5001, 10001",
+      "501"
+    );
+    if (!input) return;
+    const amount = Number(input.replace(/[^\d]/g, ""));
+    if (!Number.isFinite(amount) || amount < 100) {
+      window.alert("Minimum donation amount is ₹100.");
+      return;
+    }
+
+    const base = new URL(upiUrl);
+    base.searchParams.set("am", String(Math.round(amount)));
+    const upiWithAmount = base.toString();
+    const query = upiWithAmount.replace(/^upi:\/\/pay\?/, "");
+    const intentWithAmount = `intent://pay?${query}#Intent;scheme=upi;S.browser_fallback_url=${encodeURIComponent(
+      upiWithAmount
+    )};end`;
     const isAndroid = /android/i.test(window.navigator.userAgent);
 
     if (isAndroid) {
       const before = Date.now();
-      window.location.href = upiIntentUrl;
+      window.location.href = intentWithAmount;
 
       const fallbackTimer = window.setTimeout(() => {
         if (document.visibilityState === "hidden") return;
         if (Date.now() - before > 3000) return;
-        window.location.href = upiUrl;
+        window.location.href = upiWithAmount;
       }, 2000);
 
       document.addEventListener(
@@ -43,7 +61,7 @@ export function StickyDonateBar() {
       return;
     }
 
-    window.location.href = upiUrl;
+    window.location.href = upiWithAmount;
   };
 
   return (
