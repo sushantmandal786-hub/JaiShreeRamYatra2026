@@ -166,7 +166,28 @@ export function buildUpiLink({
     params.set("am", String(amount));
   }
 
-  return `upi://pay?${params.toString().replace(/\+/g, "%20")}`;
+  const url = `upi://pay?${params.toString().replace(/\+/g, "%20")}`;
+
+  // #region agent log
+  fetch("http://127.0.0.1:7277/ingest/151e46c7-9098-4746-8011-ac22d155f9eb", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Debug-Session-Id": "2022aa"
+    },
+    body: JSON.stringify({
+      sessionId: "2022aa",
+      runId: "pre-fix",
+      hypothesisId: "H1",
+      location: "lib/overrides.ts:buildUpiLink",
+      message: "Generated UPI URL",
+      data: { upiId, payeeName, amount: amount ?? null, url },
+      timestamp: Date.now()
+    })
+  }).catch(() => {});
+  // #endregion
+
+  return url;
 }
 
 export function isLikelyValidUpiId(upiId: string): boolean {

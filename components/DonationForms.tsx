@@ -55,6 +55,24 @@ export function DonationForms() {
     event.preventDefault();
     const amount = askDonationAmount();
     if (!amount) return;
+    // #region agent log
+    fetch("http://127.0.0.1:7277/ingest/151e46c7-9098-4746-8011-ac22d155f9eb", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Debug-Session-Id": "2022aa"
+      },
+      body: JSON.stringify({
+        sessionId: "2022aa",
+        runId: "pre-fix",
+        hypothesisId: "H2",
+        location: "components/DonationForms.tsx:openUpiCheckout",
+        message: "Main donate card UPI click",
+        data: { amount, upiUrl, userAgent: window.navigator.userAgent },
+        timestamp: Date.now()
+      })
+    }).catch(() => {});
+    // #endregion
     const { upiWithAmount, intentWithAmount } = buildUpiUrlsForAmount(amount);
     const isAndroid = /android/i.test(window.navigator.userAgent);
 
@@ -87,6 +105,24 @@ export function DonationForms() {
     event.preventDefault();
     const amount = askDonationAmount();
     if (!amount) return;
+    // #region agent log
+    fetch("http://127.0.0.1:7277/ingest/151e46c7-9098-4746-8011-ac22d155f9eb", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Debug-Session-Id": "2022aa"
+      },
+      body: JSON.stringify({
+        sessionId: "2022aa",
+        runId: "pre-fix",
+        hypothesisId: "H3",
+        location: "components/DonationForms.tsx:handleAppIntent",
+        message: "Specific app intent UPI click",
+        data: { amount, upiUrl, intentUrl, userAgent: window.navigator.userAgent },
+        timestamp: Date.now()
+      })
+    }).catch(() => {});
+    // #endregion
     const { upiWithAmount, intentWithAmount } = buildUpiUrlsForAmount(amount);
     const isAndroid = /android/i.test(window.navigator.userAgent);
 
