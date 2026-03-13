@@ -37,11 +37,9 @@ export function ParticlesDiya() {
       dummy.scale.setScalar(0.2 + Math.sin(state.clock.elapsedTime * 2 + particle.offset) * 0.1);
       
       dummy.updateMatrix();
-      mesh.current.setMatrixAt(i, dummy.matrix);
+      mesh.current!.setMatrixAt(i, dummy.matrix);
     });
-    if (mesh.current) {
-      mesh.current.instanceMatrix.needsUpdate = true;
-    }
+    mesh.current.instanceMatrix.needsUpdate = true;
   });
 
   return (
