@@ -1,15 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import {
-  buildUpiLink,
-  resolveDonateLabel,
-  resolveUpiId,
-  resolveUpiIdCandidates,
-  isLikelyValidUpiId,
-  resolveUpiNumber,
-  resolveOrganizer
-} from "@/lib/overrides";
+import { resolveDonateLabel, resolveUpiId, resolveUpiIdCandidates, isLikelyValidUpiId, resolveUpiNumber, resolveOrganizer } from "@/lib/overrides";
 import { useSiteOverrides } from "@/hooks/useSiteOverrides";
 
 type DonateSettings = {
@@ -44,16 +36,8 @@ export function useDonateSettings(options: UseDonateSettingsOptions = {}): Donat
 
   const organizerName = useMemo(() => resolveOrganizer(overrides).name, [overrides]);
 
-  const upiUrl = useMemo(
-    () =>
-      buildUpiLink({
-        upiId,
-        payeeName: organizerName,
-        amount: options.amount,
-        note: options.note ?? "Shri Ram Navami Yatra Donation"
-      }),
-    [options.amount, options.note, upiId, organizerName]
-  );
+  // Minimal UPI link: only payee address, no amount, no note.
+  const upiUrl = useMemo(() => `upi://pay?pa=${encodeURIComponent(upiId)}`, [upiId]);
 
   const upiQuery = useMemo(() => upiUrl.replace(/^upi:\/\/pay\?/, ""), [upiUrl]);
   const upiIntentUrl = useMemo(
