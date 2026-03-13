@@ -207,27 +207,8 @@ export async function fetchRemoteOverrides(): Promise<SiteOverrides | null> {
     return null;
   }
 
-  let endpoint = APPS_SCRIPT_ENDPOINT;
   try {
-    const raw = localStorage.getItem(OVERRIDE_STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw) as SiteOverrides;
-      if (parsed.appsScriptUrl && parsed.appsScriptUrl.startsWith("https://")) {
-        endpoint = parsed.appsScriptUrl;
-      }
-    }
-  } catch {
-    // ignore malformed local storage
-  }
-
-  if (!endpoint) {
-    return null;
-  }
-
-  try {
-    const url = new URL(endpoint);
-    url.searchParams.set("mode", "overrides");
-    const response = await fetch(url.toString(), { cache: "no-store" });
+    const response = await fetch("/api/overrides", { cache: "no-store", method: "GET" });
     if (!response.ok) {
       return null;
     }
