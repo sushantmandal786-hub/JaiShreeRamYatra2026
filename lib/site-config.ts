@@ -109,6 +109,7 @@ export type SiteOverrides = {
       hing?: string;
     }
   >;
+  is3DMode?: boolean;
 };
 
 export const LANGUAGE_LABELS: Record<LangCode, string> = {
