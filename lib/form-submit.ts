@@ -9,9 +9,7 @@ function resolveEndpoint() {
 
   try {
     const raw = localStorage.getItem(OVERRIDE_STORAGE_KEY);
-    if (!raw) {
-      return APPS_SCRIPT_ENDPOINT;
-    }
+    if (!raw) return APPS_SCRIPT_ENDPOINT;
 
     const parsed = JSON.parse(raw) as SiteOverrides;
     if (parsed.appsScriptUrl && parsed.appsScriptUrl.startsWith("https://")) {
@@ -24,10 +22,17 @@ function resolveEndpoint() {
   return APPS_SCRIPT_ENDPOINT;
 }
 
+/**
+ * Fire-and-forget submit to Google Apps Script.
+ * Uses mode: "no-cors" so we don't depend on CORS headers.
+ * We assume success if the fetch does not throw.
+ */
 export async function submitToAppsScript(payload: Payload) {
   const endpoint = resolveEndpoint();
-  const response = await fetch(endpoint, {
+
+  await fetch(endpoint, {
     method: "POST",
+    mode: "no-cors",
     headers: {
       "Content-Type": "application/json"
     },
@@ -37,10 +42,4 @@ export async function submitToAppsScript(payload: Payload) {
       source: "shri-ram-navami-site"
     })
   });
-
-  if (!response.ok) {
-    throw new Error(`Request failed with status ${response.status}`);
-  }
-
-  return response;
 }

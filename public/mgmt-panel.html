@@ -366,13 +366,23 @@ nav_gallery, nav_timeline, nav_newsletter, nav_donate</pre>
           <button class="primary" id="save">Save Overrides</button>
           <button class="ghost" id="load">Load Current</button>
           <button class="ghost" id="clear">Clear Overrides</button>
+          <button class="ghost" id="star-version">Star Current Version</button>
+          <button class="ghost" id="restore-last">Restore Last Starred</button>
         </div>
+
+        <section class="subcard">
+          <h3>Starred Versions</h3>
+          <p class="note">Click a version to restore that full configuration.</p>
+          <div id="starred-versions" class="actions"></div>
+        </section>
+
         <div id="status"></div>
       </section>
     </main>
 
     <script>
       const STORAGE_KEY = "shri_ram_overrides";
+      const VERSIONS_KEY = "shri_ram_overrides_versions_v1";
       const DEFAULT_APPS_SCRIPT_ENDPOINT =
         "https://script.google.com/macros/s/AKfycbw8vH3y9DWFbNVK00filTzgE_UEIChF75osSFIzJRwaI_67sVphTjmi_VK35gzxW4gw/exec";
       const PASSWORD_HASH = "e50b3490a450b33cd01011e276322ffec7a82b7dd88b8916cdcbb9e21c66db08";
@@ -559,6 +569,18 @@ nav_gallery, nav_timeline, nav_newsletter, nav_donate</pre>
         } catch {
           return {};
         }
+      }
+
+      function readStarredVersions() {
+        try {
+          return JSON.parse(localStorage.getItem(VERSIONS_KEY) || "[]");
+        } catch {
+          return [];
+        }
+      }
+
+      function writeStarredVersions(list) {
+        localStorage.setItem(VERSIONS_KEY, JSON.stringify(list || []));
       }
 
       function cleanDigits(value) {
@@ -892,17 +914,84 @@ nav_gallery, nav_timeline, nav_newsletter, nav_donate</pre>
         try {
           const url = new URL(endpoint);
           url.searchParams.set("mode", "overrides");
-          const response = await fetch(url.toString(), {
+          await fetch(url.toString(), {
             method: "POST",
+            mode: "no-cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
           });
-          if (!response.ok) {
-            throw new Error("cloud sync failed");
-          }
-          setStatus("Saved locally and synced to cloud.");
+          setStatus(
+            "Saved locally and sync request sent to cloud (Apps Script). Browser cannot verify response in no-cors mode."
+          );
         } catch (error) {
-          setStatus("Saved locally, but cloud sync failed. Check Apps Script permissions.", false);
+          setStatus("Saved locally, but sync request could not be sent. Check Apps Script URL.", false);
+        }
+      }
+
+      function renderStarredList() {
+        const container = document.getElementById("starred-versions");
+        if (!container) return;
+
+        const list = readStarredVersions();
+        if (!list.length) {
+          container.textContent = "No starred versions yet.";
+          return;
+        }
+
+        container.innerHTML = list
+          .slice()
+          .reverse()
+          .map((item, idx) => {
+            const label = new Date(item.createdAt).toLocaleString();
+            return `<button data-version-id="${item.id}" class="ghost" style="margin-right:6px;margin-bottom:6px;font-size:11px;">${
+              idx + 1
+            }. ${label}</button>`;
+          })
+          .join("");
+
+        container.querySelectorAll("button[data-version-id]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const id = Number(btn.getAttribute("data-version-id") || "0");
+            const all = readStarredVersions();
+            const match = all.find((v) => v.id === id);
+            if (!match) return;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(match.data || {}));
+            window.dispatchEvent(new Event("shri-ram-overrides-change"));
+            loadToFields();
+            setStatus("Restored starred version from " + new Date(match.createdAt).toLocaleString());
+          });
+        });
+      }
+
+      function starCurrentVersion() {
+        const current = readOverrides();
+        const list = readStarredVersions();
+        const entry = {
+          id: Date.now(),
+          createdAt: new Date().toISOString(),
+          data: current
+        };
+        list.push(entry);
+        writeStarredVersions(list);
+        renderStarredList();
+        setStatus("Current version starred (snapshot saved).");
+      }
+
+      function restoreLastStarred() {
+        const list = readStarredVersions();
+        if (!list.length) {
+          setStatus("No starred versions found.", false);
+          return;
+        }
+
+        const last = list[list.length - 1];
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(last.data || {}));
+          window.dispatchEvent(new Event("shri-ram-overrides-change"));
+          loadToFields();
+          setStatus("Restored last starred version from " + new Date(last.createdAt).toLocaleString());
+        } catch {
+          setStatus("Could not restore starred version.", false);
         }
       }
 
@@ -964,6 +1053,8 @@ nav_gallery, nav_timeline, nav_newsletter, nav_donate</pre>
         window.dispatchEvent(new Event("shri-ram-overrides-change"));
         setStatus("Overrides cleared.");
       });
+      document.getElementById("star-version").addEventListener("click", starCurrentVersion);
+      document.getElementById("restore-last").addEventListener("click", restoreLastStarred);
 
       (function init() {
         initOrganizerImageUploader();
@@ -973,6 +1064,7 @@ nav_gallery, nav_timeline, nav_newsletter, nav_donate</pre>
         if (lock) {
           showRemainingLockMessage(lock);
         }
+        renderStarredList();
       })();
     </script>
   </body>
