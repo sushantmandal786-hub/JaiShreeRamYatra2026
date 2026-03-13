@@ -200,11 +200,8 @@
               <label>Donation Feed URL (Google Sheet/API JSON)</label>
               <input id="donation-feed-url" type="url" placeholder="https://.../exec?mode=donation_feed" />
             </div>
-            <div>
-              <label>Enable Immersive 3D Mode</label>
-              <br/>
-              <input id="is-3d-mode" type="checkbox" style="width: 20px; height: 20px; margin-top: 10px;" />
-              <span class="note" style="margin-left:8px;">Toggle modern 2026 3D experience</span>
+            <div style="grid-column: span 2;">
+              <p class="note">These external URLs power your forms and live feeds.</p>
             </div>
           </div>
         </div>
@@ -546,7 +543,6 @@ nav_gallery, nav_timeline, nav_newsletter, nav_donate</pre>
       const fields = {
         appsScriptUrl: document.getElementById("apps-script"),
         donationFeedUrl: document.getElementById("donation-feed-url"),
-        is3DMode: document.getElementById("is-3d-mode"),
         heroBgImage: document.getElementById("hero-bg-image"),
         heroOpacity: document.getElementById("hero-opacity"),
         logoPath: document.getElementById("logo-path"),
@@ -850,7 +846,6 @@ nav_gallery, nav_timeline, nav_newsletter, nav_donate</pre>
         const data = readOverrides();
         fields.appsScriptUrl.value = data.appsScriptUrl || "";
         fields.donationFeedUrl.value = data.donationFeedUrl || "";
-        fields.is3DMode.checked = data.is3DMode !== false; // defaults to true
         fields.heroBgImage.value = data.hero?.backgroundImage || "";
         fields.heroOpacity.value = data.hero?.opacity ?? "";
         fields.logoPath.value = data.logoPath || "";
@@ -887,7 +882,6 @@ nav_gallery, nav_timeline, nav_newsletter, nav_donate</pre>
           const payload = {
             appsScriptUrl: fields.appsScriptUrl.value.trim() || undefined,
             donationFeedUrl: fields.donationFeedUrl.value.trim() || undefined,
-            is3DMode: fields.is3DMode.checked,
             logoPath: fields.logoPath.value.trim() || undefined,
             hero: {
               backgroundImage: fields.heroBgImage.value.trim() || undefined,
