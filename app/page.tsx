@@ -1,5 +1,5 @@
-import { AppRootFallback } from "@/components/Scene3D";
+import { HomePage } from "@/components/HomePage";
 
 export default function Page() {
-  return <AppRootFallback />;
+  return <HomePage />;
 }
